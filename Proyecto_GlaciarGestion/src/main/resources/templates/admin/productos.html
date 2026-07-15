@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos - Administrador</title>
+</head>
+<body>
+<h1>Lista de productos (Administrador)</h1>
+<p>Usuario: <strong th:text="${usuario.nombre}"></strong></p>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesion</button>
+</form>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Presentacion</th>
+        <th>Precio</th>
+        <th>Cantidad</th>
+        <th>Activo</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="producto : ${productos}">
+        <td th:text="${producto.id}"></td>
+        <td th:text="${producto.nombre}"></td>
+        <td th:text="${producto.presentacion}"></td>
+        <td th:text="${producto.precio}"></td>
+        <td th:text="${producto.cantidad}"></td>
+        <td th:text="${producto.activo}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

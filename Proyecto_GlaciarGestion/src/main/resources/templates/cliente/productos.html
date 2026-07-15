@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Productos - Cliente</title>
+</head>
+<body>
+<h1>Catalogo de productos</h1>
+<p>Cliente: <strong th:text="${usuario.nombre}"></strong></p>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesion</button>
+</form>
+
+<p><a th:href="@{/cliente/carrito}">Ver carrito</a> | <a th:href="@{/cliente/pedidos}">Mis pedidos</a></p>
+
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>Nombre</th>
+        <th>Presentacion</th>
+        <th>Precio</th>
+        <th>Cantidad disponible</th>
+        <th>Detalle</th>
+        <th>Agregar al carrito</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="producto : ${productos}">
+        <td th:text="${producto.nombre}"></td>
+        <td th:text="${producto.presentacion}"></td>
+        <td th:text="${producto.precio}"></td>
+        <td th:text="${producto.cantidad}"></td>
+        <td><a th:href="@{'/cliente/productos/' + ${producto.id}}">Ver detalle</a></td>
+        <td>
+            <form th:action="@{/cliente/carrito/agregar}" method="post">
+                <input type="hidden" name="productoId" th:value="${producto.id}">
+                <input type="number" name="cantidad" min="1" value="1" required>
+                <button type="submit">Agregar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
