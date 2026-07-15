@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle de producto</title>
+</head>
+<body>
+<h1>Detalle del producto</h1>
+
+<p><a th:href="@{/cliente/productos}">Volver al catalogo</a></p>
+
+<p><strong>Nombre:</strong> <span th:text="${producto.nombre}"></span></p>
+<p><strong>Presentacion:</strong> <span th:text="${producto.presentacion}"></span></p>
+<p><strong>Precio:</strong> <span th:text="${producto.precio}"></span></p>
+<p><strong>Cantidad disponible:</strong> <span th:text="${producto.cantidad}"></span></p>
+
+<form th:action="@{/cliente/carrito/agregar}" method="post">
+    <input type="hidden" name="productoId" th:value="${producto.id}">
+    <label>Cantidad:</label>
+    <input type="number" name="cantidad" min="1" value="1" required>
+    <button type="submit">Agregar al carrito</button>
+</form>
+</body>
+</html>

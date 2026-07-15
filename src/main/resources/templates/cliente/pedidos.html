@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis Pedidos</title>
+</head>
+<body>
+<h1>Mis pedidos</h1>
+<p><a th:href="@{/cliente/productos}">Volver al catalogo</a></p>
+
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>Numero</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Estado</th>
+        <th>Detalle</th>
+        <th>Consultar estado</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pedido : ${pedidos}">
+        <td th:text="${pedido.id}"></td>
+        <td th:text="${pedido.fecha}"></td>
+        <td th:text="${pedido.total}"></td>
+        <td th:text="${pedido.estado}"></td>
+        <td><a th:href="@{'/cliente/pedidos/' + ${pedido.id} + '/detalle'}">Ver detalle</a></td>
+        <td><a th:href="@{'/cliente/pedidos/' + ${pedido.id} + '/estado'}">Ver estado</a></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

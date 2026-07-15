@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalle del pedido</title>
+</head>
+<body>
+<h1>Detalle del pedido</h1>
+
+<p><a th:href="@{/cliente/pedidos}">Volver a pedidos</a></p>
+
+<p><strong>Pedido #:</strong> <span th:text="${pedido.id}"></span></p>
+<p><strong>Fecha:</strong> <span th:text="${pedido.fecha}"></span></p>
+<p><strong>Estado:</strong> <span th:text="${pedido.estado}"></span></p>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio unitario</th>
+        <th>Subtotal</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="detalle : ${detalles}">
+        <td th:text="${detalle.producto.nombre}"></td>
+        <td th:text="${detalle.cantidad}"></td>
+        <td th:text="${detalle.precioUnitario}"></td>
+        <td th:text="${detalle.precioUnitario * detalle.cantidad}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p><strong>Total del pedido:</strong> <span th:text="${pedido.total}"></span></p>
+</body>
+</html>

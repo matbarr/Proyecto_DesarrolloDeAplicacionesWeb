@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Estado del pedido</title>
+</head>
+<body>
+<h1>Estado del pedido</h1>
+<p><a th:href="@{/cliente/pedidos}">Volver a pedidos</a></p>
+
+<p>Pedido #: <strong th:text="${pedido.id}"></strong></p>
+<p>Estado actual: <strong th:text="${pedido.estado}"></strong></p>
+<p>Fecha: <span th:text="${pedido.fecha}"></span></p>
+<p>Total: <span th:text="${pedido.total}"></span></p>
+</body>
+</html>
