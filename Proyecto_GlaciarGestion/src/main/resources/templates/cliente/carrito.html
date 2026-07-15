@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Carrito - Cliente</title>
+</head>
+<body>
+<h1>Mi carrito</h1>
+
+<p><a th:href="@{/cliente/productos}">Volver al catalogo</a> | <a th:href="@{/cliente/pedidos}">Mis pedidos</a></p>
+
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio unitario</th>
+        <th>Subtotal</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${resumen.items}">
+        <td th:text="${item.productoNombre}"></td>
+        <td th:text="${item.cantidad}"></td>
+        <td th:text="${item.precioUnitario}"></td>
+        <td th:text="${item.subtotal}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<p>Total del pedido: <strong th:text="${resumen.total}"></strong></p>
+
+<h2>Direcciones de entrega</h2>
+<ul>
+    <li th:each="direccion : ${direcciones}">
+        <span th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito + ' - ' + direccion.direccionExacta}"></span>
+    </li>
+</ul>
+
+<h3>Registrar direccion</h3>
+<form th:action="@{/cliente/direcciones}" th:object="${direccionRequest}" method="post">
+    <label>Provincia:</label>
+    <input type="text" th:field="*{provincia}" required>
+    <br>
+    <label>Canton:</label>
+    <input type="text" th:field="*{canton}" required>
+    <br>
+    <label>Distrito:</label>
+    <input type="text" th:field="*{distrito}" required>
+    <br>
+    <label>Direccion exacta:</label>
+    <input type="text" th:field="*{direccionExacta}" required>
+    <br>
+    <button type="submit">Guardar direccion</button>
+</form>
+
+<h3>Confirmar pedido</h3>
+<form th:action="@{/cliente/pedidos/confirmar}" method="post">
+    <label>Selecciona una direccion:</label>
+    <select name="direccionId" required>
+        <option value="">-- Seleccionar --</option>
+        <option th:each="direccion : ${direcciones}" th:value="${direccion.id}"
+                th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito}"></option>
+    </select>
+    <button type="submit">Confirmar pedido</button>
+</form>
+</body>
+</html>

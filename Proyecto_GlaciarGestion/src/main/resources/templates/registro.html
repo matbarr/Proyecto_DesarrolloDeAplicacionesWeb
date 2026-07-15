@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Glaciar Gestion</title>
+</head>
+<body>
+<h1>Registro de cliente</h1>
+
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+<form th:action="@{/registro}" th:object="${registroRequest}" method="post">
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required>
+    <br>
+    <label>Correo:</label>
+    <input type="email" th:field="*{correo}" required>
+    <br>
+    <label>Telefono:</label>
+    <input type="text" th:field="*{telefono}" required>
+    <br>
+    <label>Contrasena:</label>
+    <input type="password" th:field="*{contrasena}" required>
+    <br>
+    <button type="submit">Registrarme</button>
+</form>
+
+<p><a th:href="@{/login}">Volver al login</a></p>
+</body>
+</html>
