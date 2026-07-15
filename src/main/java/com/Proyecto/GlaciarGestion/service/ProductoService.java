@@ -27,6 +27,31 @@ public class ProductoService {
         return productoRepository.findAll();
     }
 
+    @Transactional
+    public Producto guardar(Producto producto) {
+        return productoRepository.save(producto);
+    }
+
+    @Transactional
+    public Producto actualizar(Long productoId, Producto productoDatos) {
+        Producto producto = productoRepository.findById(productoId)
+            .orElseThrow(() -> new BusinessException("Producto no encontrado."));
+
+        producto.setNombre(productoDatos.getNombre());
+        producto.setPresentacion(productoDatos.getPresentacion());
+        producto.setPrecio(productoDatos.getPrecio());
+        producto.setCantidad(productoDatos.getCantidad());
+        return productoRepository.save(producto);
+    }
+
+    @Transactional
+    public Producto desactivar(Long productoId) {
+        Producto producto = productoRepository.findById(productoId)
+            .orElseThrow(() -> new BusinessException("Producto no encontrado."));
+        producto.setActivo(false);
+        return productoRepository.save(producto);
+    }
+
     @Transactional(readOnly = true)
     public Producto obtenerProductoActivo(Long productoId) {
         Producto producto = productoRepository.findById(productoId)

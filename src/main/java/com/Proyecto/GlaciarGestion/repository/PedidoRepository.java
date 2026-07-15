@@ -9,4 +9,6 @@ import com.Proyecto.GlaciarGestion.model.Usuario;
 
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByUsuarioOrderByFechaDesc(Usuario usuario);
+
+    List<Pedido> findAllByOrderByFechaDesc();
 }

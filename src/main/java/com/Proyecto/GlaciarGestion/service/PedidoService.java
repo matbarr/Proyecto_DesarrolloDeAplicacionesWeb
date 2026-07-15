@@ -93,6 +93,19 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
+    public List<Pedido> listarTodos() {
+        return pedidoRepository.findAllByOrderByFechaDesc();
+    }
+
+    @Transactional
+    public Pedido actualizarEstadoPedido(Long pedidoId, EstadoPedido estado) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+            .orElseThrow(() -> new BusinessException("Pedido no encontrado."));
+        pedido.setEstado(estado);
+        return pedidoRepository.save(pedido);
+    }
+
+    @Transactional(readOnly = true)
     public Pedido obtenerPedidoCliente(Long pedidoId, Usuario usuario) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
             .orElseThrow(() -> new BusinessException("Pedido no encontrado."));

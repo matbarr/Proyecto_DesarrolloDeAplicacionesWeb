@@ -134,6 +134,42 @@ public class ClienteController {
         return "cliente/carrito";
     }
 
+    @PostMapping("/carrito/items/{detalleId}/cantidad")
+    public String actualizarCantidadCarrito(
+        HttpSession session,
+        @PathVariable Long detalleId,
+        @RequestParam("cantidad") Integer cantidad,
+        Model model
+    ) {
+        Usuario usuario = clienteAutenticado(session);
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            carritoService.actualizarCantidad(usuario, detalleId, cantidad);
+            return "redirect:/cliente/carrito";
+        } catch (BusinessException ex) {
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("resumen", carritoService.obtenerResumen(usuario));
+            model.addAttribute("direcciones", direccionService.listarPorUsuario(usuario));
+            model.addAttribute("direccionRequest", new DireccionRequest());
+            return "cliente/carrito";
+        }
+    }
+
+    @PostMapping("/carrito/items/{detalleId}/eliminar")
+    public String eliminarProductoCarrito(HttpSession session, @PathVariable Long detalleId) {
+        Usuario usuario = clienteAutenticado(session);
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        carritoService.eliminarProducto(usuario, detalleId);
+        return "redirect:/cliente/carrito";
+    }
+
     @PostMapping("/direcciones")
     public String registrarDireccion(
         HttpSession session,

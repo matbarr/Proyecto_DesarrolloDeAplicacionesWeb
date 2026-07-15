@@ -8,10 +8,32 @@
 <h1>Lista de productos (Administrador)</h1>
 <p>Usuario: <strong th:text="${usuario.nombre}"></strong></p>
 
+<p><a th:href="@{/admin/pedidos}">Ver pedidos</a></p>
+
 <form th:action="@{/logout}" method="post">
     <button type="submit">Cerrar sesion</button>
 </form>
 
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
+
+<h2 th:text="${editando} ? 'Editar producto' : 'Registrar producto'"></h2>
+<form th:action="@{${editando ? '/admin/productos/' + producto.id + '/editar' : '/admin/productos'}}" th:object="${producto}" method="post">
+    <label>Nombre:</label>
+    <input type="text" th:field="*{nombre}" required>
+    <br>
+    <label>Presentación:</label>
+    <input type="text" th:field="*{presentacion}" required>
+    <br>
+    <label>Precio:</label>
+    <input type="number" step="0.01" th:field="*{precio}" required>
+    <br>
+    <label>Cantidad:</label>
+    <input type="number" th:field="*{cantidad}" required>
+    <br>
+    <button type="submit">Guardar</button>
+</form>
+
+<h2>Productos existentes</h2>
 <table border="1" cellpadding="6">
     <thead>
     <tr>
@@ -21,6 +43,7 @@
         <th>Precio</th>
         <th>Cantidad</th>
         <th>Activo</th>
+        <th>Acciones</th>
     </tr>
     </thead>
     <tbody>
@@ -31,6 +54,12 @@
         <td th:text="${producto.precio}"></td>
         <td th:text="${producto.cantidad}"></td>
         <td th:text="${producto.activo}"></td>
+        <td>
+            <a th:href="@{/admin/productos/{id}/editar(id=${producto.id})}">Editar</a>
+            <form th:action="@{/admin/productos/{id}/desactivar(id=${producto.id})}" method="post" style="display:inline">
+                <button type="submit">Desactivar</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>

@@ -18,14 +18,25 @@
         <th>Cantidad</th>
         <th>Precio unitario</th>
         <th>Subtotal</th>
+        <th>Acciones</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="item : ${resumen.items}">
         <td th:text="${item.productoNombre}"></td>
-        <td th:text="${item.cantidad}"></td>
+        <td>
+            <form th:action="@{/cliente/carrito/items/{id}/cantidad(id=${item.detalleId})}" method="post" style="display:inline">
+                <input type="number" name="cantidad" th:value="${item.cantidad}" min="1" required>
+                <button type="submit">Actualizar</button>
+            </form>
+        </td>
         <td th:text="${item.precioUnitario}"></td>
         <td th:text="${item.subtotal}"></td>
+        <td>
+            <form th:action="@{/cliente/carrito/items/{id}/eliminar(id=${item.detalleId})}" method="post" style="display:inline">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>

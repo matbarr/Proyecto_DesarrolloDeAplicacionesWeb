@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos - Administrador</title>
+</head>
+<body>
+<h1>Gestión de pedidos</h1>
+<p>Usuario: <strong th:text="${usuario.nombre}"></strong></p>
+
+<p><a th:href="@{/admin/productos}">Volver a productos</a></p>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesión</button>
+</form>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Estado</th>
+        <th>Actualizar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="pedido : ${pedidos}">
+        <td th:text="${pedido.id}"></td>
+        <td th:text="${pedido.usuario.nombre}"></td>
+        <td th:text="${#temporals.format(pedido.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+        <td th:text="${pedido.total}"></td>
+        <td th:text="${pedido.estado}"></td>
+        <td>
+            <form th:action="@{/admin/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                <select name="estado">
+                    <option th:each="estado : ${estados}" th:value="${estado}" th:text="${estado}" th:selected="${estado == pedido.estado}"></option>
+                </select>
+                <button type="submit">Guardar</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

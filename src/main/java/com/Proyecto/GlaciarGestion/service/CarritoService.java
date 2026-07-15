@@ -90,6 +90,32 @@ public class CarritoService {
     }
 
     @Transactional
+    public void actualizarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
+        if (cantidad == null || cantidad <= 0) {
+            eliminarProducto(usuario, detalleId);
+            return;
+        }
+
+        DetalleCarrito detalle = obtenerDetalleDelCarrito(usuario, detalleId);
+        Producto producto = detalle.getProducto();
+        if (!producto.isActivo()) {
+            throw new BusinessException("El producto ya no se encuentra disponible.");
+        }
+        if (cantidad > producto.getCantidad()) {
+            throw new BusinessException("No se puede asignar una cantidad superior a la disponible.");
+        }
+
+        detalle.setCantidad(cantidad);
+        detalleCarritoRepository.save(detalle);
+    }
+
+    @Transactional
+    public void eliminarProducto(Usuario usuario, Long detalleId) {
+        DetalleCarrito detalle = obtenerDetalleDelCarrito(usuario, detalleId);
+        detalleCarritoRepository.delete(detalle);
+    }
+
+    @Transactional
     public void vaciarCarrito(Usuario usuario) {
         Carrito carrito = carritoRepository.findByUsuario(usuario).orElse(null);
         if (carrito != null) {
@@ -115,5 +141,16 @@ public class CarritoService {
                 carrito.setCreadoEn(LocalDateTime.now());
                 return carritoRepository.save(carrito);
             });
+    }
+
+    private DetalleCarrito obtenerDetalleDelCarrito(Usuario usuario, Long detalleId) {
+        DetalleCarrito detalle = detalleCarritoRepository.findById(detalleId)
+            .orElseThrow(() -> new BusinessException("Producto del carrito no encontrado."));
+
+        if (!detalle.getCarrito().getUsuario().getId().equals(usuario.getId())) {
+            throw new BusinessException("El producto no pertenece a tu carrito.");
+        }
+
+        return detalle;
     }
 }
