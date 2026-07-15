@@ -31,9 +31,10 @@ public class SessionService {
 
     public Usuario obtenerUsuario(HttpSession session) {
         Object value = session.getAttribute(USER_ID_KEY);
-        if (!(value instanceof Long userId)) {
+        if (!(value instanceof Long)) {
             return null;
         }
+        Long userId = (Long) value;
         return authService.obtenerPorId(userId);
     }
 
