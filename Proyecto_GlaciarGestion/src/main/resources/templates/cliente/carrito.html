@@ -1,13 +1,16 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Carrito - Cliente</title>
 </head>
 <body>
 <h1>Mi carrito</h1>
 
-<p><a th:href="@{/cliente/productos}">Volver al catalogo</a> | <a th:href="@{/cliente/pedidos}">Mis pedidos</a></p>
+<p>
+    <a th:href="@{/cliente/productos}">Volver al catalogo</a> |
+    <a th:href="@{/cliente/pedidos}">Mis pedidos</a>
+</p>
 
 <p th:if="${error}" th:text="${error}" style="color:red"></p>
 
@@ -15,17 +18,35 @@
     <thead>
     <tr>
         <th>Producto</th>
-        <th>Cantidad</th>
+        <th>Cantidad actual</th>
         <th>Precio unitario</th>
         <th>Subtotal</th>
+        <th>Actualizar cantidad</th>
+        <th>Eliminar</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="item : ${resumen.items}">
         <td th:text="${item.productoNombre}"></td>
         <td th:text="${item.cantidad}"></td>
         <td th:text="${item.precioUnitario}"></td>
         <td th:text="${item.subtotal}"></td>
+
+        <td>
+            <form th:action="@{/cliente/carrito/actualizar}" method="post">
+                <input type="hidden" name="detalleId" th:value="${item.detalleId}">
+                <input type="number" name="cantidad" min="1" th:value="${item.cantidad}" required>
+                <button type="submit">Actualizar</button>
+            </form>
+        </td>
+
+        <td>
+            <form th:action="@{/cliente/carrito/eliminar}" method="post">
+                <input type="hidden" name="detalleId" th:value="${item.detalleId}">
+                <button type="submit">Eliminar</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
@@ -44,26 +65,34 @@
     <label>Provincia:</label>
     <input type="text" th:field="*{provincia}" required>
     <br>
+
     <label>Canton:</label>
     <input type="text" th:field="*{canton}" required>
     <br>
+
     <label>Distrito:</label>
     <input type="text" th:field="*{distrito}" required>
     <br>
+
     <label>Direccion exacta:</label>
     <input type="text" th:field="*{direccionExacta}" required>
     <br>
+
     <button type="submit">Guardar direccion</button>
 </form>
 
 <h3>Confirmar pedido</h3>
 <form th:action="@{/cliente/pedidos/confirmar}" method="post">
     <label>Selecciona una direccion:</label>
+
     <select name="direccionId" required>
         <option value="">-- Seleccionar --</option>
-        <option th:each="direccion : ${direcciones}" th:value="${direccion.id}"
-                th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito}"></option>
+        <option th:each="direccion : ${direcciones}"
+                th:value="${direccion.id}"
+                th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito}">
+        </option>
     </select>
+
     <button type="submit">Confirmar pedido</button>
 </form>
 </body>

@@ -1,16 +1,24 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Productos - Administrador</title>
 </head>
 <body>
-<h1>Lista de productos (Administrador)</h1>
+<h1>Gestion de productos</h1>
+
 <p>Usuario: <strong th:text="${usuario.nombre}"></strong></p>
 
 <form th:action="@{/logout}" method="post">
     <button type="submit">Cerrar sesion</button>
 </form>
+
+<p>
+    <a data-th-href="@{/admin/productos/nuevo}">Registrar producto</a> |
+    <a data-th-href="@{/admin/pedidos}">Consultar pedidos</a>
+</p>
+
+<p th:if="${error}" th:text="${error}" style="color:red"></p>
 
 <table border="1" cellpadding="6">
     <thead>
@@ -21,8 +29,11 @@
         <th>Precio</th>
         <th>Cantidad</th>
         <th>Activo</th>
+        <th>Modificar</th>
+        <th>Desactivar</th>
     </tr>
     </thead>
+
     <tbody>
     <tr th:each="producto : ${productos}">
         <td th:text="${producto.id}"></td>
@@ -31,6 +42,16 @@
         <td th:text="${producto.precio}"></td>
         <td th:text="${producto.cantidad}"></td>
         <td th:text="${producto.activo}"></td>
+
+        <td>
+            <a th:href="@{'/admin/productos/' + ${producto.id} + '/editar'}">Modificar</a>
+        </td>
+
+        <td>
+            <form th:action="@{'/admin/productos/' + ${producto.id} + '/desactivar'}" method="post">
+                <button type="submit" th:disabled="${!producto.activo}">Desactivar</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>

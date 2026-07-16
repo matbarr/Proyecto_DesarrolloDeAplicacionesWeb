@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario Producto</title>
+</head>
+<body>
+<h1 data-th-text="${modo == 'nuevo' ? 'Registrar producto' : 'Modificar producto'}"></h1>
+
+<p>
+    <a data-th-href="@{/admin/productos}">Volver a productos</a>
+</p>
+
+<form data-th-action="${modo == 'nuevo'} ? @{/admin/productos} : @{'/admin/productos/' + ${producto.id}}"
+      data-th-object="${productoRequest}"
+      method="post">
+
+    <label>Nombre:</label>
+    <input type="text" data-th-field="*{nombre}" required>
+    <span data-th-if="${#fields.hasErrors('nombre')}" data-th-errors="*{nombre}" style="color:red"></span>
+    <br>
+
+    <label>Presentacion:</label>
+    <input type="text" data-th-field="*{presentacion}" required>
+    <span data-th-if="${#fields.hasErrors('presentacion')}" data-th-errors="*{presentacion}" style="color:red"></span>
+    <br>
+
+    <label>Precio:</label>
+    <input type="number" step="0.01" data-th-field="*{precio}" required>
+    <span data-th-if="${#fields.hasErrors('precio')}" data-th-errors="*{precio}" style="color:red"></span>
+    <br>
+
+    <label>Cantidad:</label>
+    <input type="number" data-th-field="*{cantidad}" required>
+    <span data-th-if="${#fields.hasErrors('cantidad')}" data-th-errors="*{cantidad}" style="color:red"></span>
+    <br>
+
+    <label>Activo:</label>
+    <input type="checkbox" data-th-field="*{activo}">
+    <br>
+
+    <button type="submit">Guardar</button>
+</form>
+</body>
+</html>
