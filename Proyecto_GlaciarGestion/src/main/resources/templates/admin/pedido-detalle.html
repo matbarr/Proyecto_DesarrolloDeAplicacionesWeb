@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Pedidos - Administrador</title>
+</head>
+<body>
+<h1>Pedidos realizados</h1>
+
+<p>Usuario: <strong data-th-text="${usuario.nombre}"></strong></p>
+
+<p>
+    <a data-th-href="@{/admin/productos}">Volver a productos</a>
+</p>
+
+<p data-th-if="${error}" data-th-text="${error}" style="color:red"></p>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Total</th>
+        <th>Estado</th>
+        <th>Detalle</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr data-th-each="pedido : ${pedidos}">
+        <td data-th-text="${pedido.id}"></td>
+        <td data-th-text="${pedido.usuario.nombre}"></td>
+        <td data-th-text="${pedido.fecha}"></td>
+        <td data-th-text="${pedido.total}"></td>
+        <td data-th-text="${pedido.estado}"></td>
+        <td>
+            <a data-th-href="@{'/admin/pedidos/' + ${pedido.id}}">Ver detalle</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

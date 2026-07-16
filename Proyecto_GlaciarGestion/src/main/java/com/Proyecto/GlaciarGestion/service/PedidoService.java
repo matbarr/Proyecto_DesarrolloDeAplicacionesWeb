@@ -109,4 +109,27 @@ public class PedidoService {
         Pedido pedido = obtenerPedidoCliente(pedidoId, usuario);
         return detallePedidoRepository.findByPedidoOrderByIdAsc(pedido);
     }
+    @Transactional(readOnly = true)
+public List<Pedido> listarTodosPedidos() {
+    return pedidoRepository.findAllByOrderByFechaDesc();
+}
+
+@Transactional(readOnly = true)
+public Pedido obtenerPedido(Long pedidoId) {
+    return pedidoRepository.findById(pedidoId)
+        .orElseThrow(() -> new BusinessException("Pedido no encontrado."));
+}
+
+@Transactional(readOnly = true)
+public List<DetallePedido> obtenerDetallesPedido(Long pedidoId) {
+    Pedido pedido = obtenerPedido(pedidoId);
+    return detallePedidoRepository.findByPedidoOrderByIdAsc(pedido);
+}
+
+@Transactional
+public void actualizarEstado(Long pedidoId, EstadoPedido estado) {
+    Pedido pedido = obtenerPedido(pedidoId);
+    pedido.setEstado(estado);
+    pedidoRepository.save(pedido);
+}
 }
