@@ -59,6 +59,40 @@ public class CarritoService {
         detalle.setCantidad(nuevaCantidad);
         detalleCarritoRepository.save(detalle);
     }
+    @Transactional
+public void actualizarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
+    if (cantidad == null || cantidad <= 0) {
+        throw new BusinessException("La cantidad debe ser mayor que cero.");
+    }
+
+    DetalleCarrito detalle = detalleCarritoRepository.findById(detalleId)
+        .orElseThrow(() -> new BusinessException("El producto no existe en el carrito."));
+
+    if (!detalle.getCarrito().getUsuario().getId().equals(usuario.getId())) {
+        throw new BusinessException("No tiene permiso para modificar este carrito.");
+    }
+
+    Producto producto = detalle.getProducto();
+
+    if (cantidad > producto.getCantidad()) {
+        throw new BusinessException("No hay suficiente inventario disponible.");
+    }
+
+    detalle.setCantidad(cantidad);
+    detalleCarritoRepository.save(detalle);
+}
+
+@Transactional
+public void eliminarProducto(Usuario usuario, Long detalleId) {
+    DetalleCarrito detalle = detalleCarritoRepository.findById(detalleId)
+        .orElseThrow(() -> new BusinessException("El producto no existe en el carrito."));
+
+    if (!detalle.getCarrito().getUsuario().getId().equals(usuario.getId())) {
+        throw new BusinessException("No tiene permiso para eliminar este producto.");
+    }
+
+    detalleCarritoRepository.delete(detalle);
+}
 
     @Transactional(readOnly = true)
     public CarritoResumenView obtenerResumen(Usuario usuario) {
