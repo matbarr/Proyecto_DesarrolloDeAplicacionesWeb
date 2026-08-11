@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.Proyecto.GlaciarGestion.model.RolUsuario;
 import com.Proyecto.GlaciarGestion.model.Usuario;
 import com.Proyecto.GlaciarGestion.service.AuthService;
+import com.Proyecto.GlaciarGestion.service.BusinessException;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -35,7 +36,14 @@ public class SessionService {
             return null;
         }
         Long userId = (Long) value;
-        return authService.obtenerPorId(userId);
+        try {
+            return authService.obtenerPorId(userId);
+        } catch (BusinessException ex) {
+            // La sesion apunta a un usuario inexistente; se limpia para evitar errores repetidos.
+            session.removeAttribute(USER_ID_KEY);
+            session.removeAttribute(USER_ROLE_KEY);
+            return null;
+        }
     }
 
     public boolean tieneRol(HttpSession session, RolUsuario rol) {

@@ -103,6 +103,7 @@ public class ClienteController {
         }
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("usuario", usuario);
             model.addAttribute("productos", productoService.listarActivos());
             return "cliente/productos";
         }
@@ -112,6 +113,7 @@ public class ClienteController {
             return "redirect:/cliente/carrito";
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
+            model.addAttribute("usuario", usuario);
             model.addAttribute("productos", productoService.listarActivos());
             return "cliente/productos";
         }
