@@ -87,8 +87,15 @@ public class AdminController {
             return "admin/producto-form";
         }
 
-        productoService.registrarProducto(productoRequest);
-        return "redirect:/admin/productos";
+        try {
+            productoService.registrarProducto(productoRequest);
+            return "redirect:/admin/productos";
+        } catch (BusinessException ex) {
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("modo", "nuevo");
+            return "admin/producto-form";
+        }
     }
 
     @GetMapping("/productos/{productoId}/editar")
@@ -132,15 +139,24 @@ public class AdminController {
             return "redirect:/login";
         }
 
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("usuario", usuario);
-            model.addAttribute("producto", productoService.obtenerPorId(productoId));
-            model.addAttribute("modo", "editar");
-            return "admin/producto-form";
-        }
+        try {
+            Producto producto = productoService.obtenerPorId(productoId);
 
-        productoService.actualizarProducto(productoId, productoRequest);
-        return "redirect:/admin/productos";
+            if (bindingResult.hasErrors()) {
+                model.addAttribute("usuario", usuario);
+                model.addAttribute("producto", producto);
+                model.addAttribute("modo", "editar");
+                return "admin/producto-form";
+            }
+
+            productoService.actualizarProducto(productoId, productoRequest);
+            return "redirect:/admin/productos";
+        } catch (BusinessException ex) {
+            model.addAttribute("usuario", usuario);
+            model.addAttribute("error", ex.getMessage());
+            model.addAttribute("productos", productoService.listarTodos());
+            return "admin/productos";
+        }
     }
 
     @PostMapping("/productos/{productoId}/desactivar")
@@ -214,14 +230,23 @@ public String detallePedidoAdmin(
 public String actualizarEstadoPedido(
     HttpSession session,
     @PathVariable Long pedidoId,
-    @RequestParam EstadoPedido estado
+    @RequestParam EstadoPedido estado,
+    Model model
 ) {
     Usuario usuario = adminAutenticado(session);
     if (usuario == null) {
         return "redirect:/login";
     }
 
-    pedidoService.actualizarEstado(pedidoId, estado);
+    try {
+        pedidoService.actualizarEstado(pedidoId, estado);
+    } catch (BusinessException ex) {
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("error", ex.getMessage());
+        model.addAttribute("pedidos", pedidoService.listarTodosPedidos());
+        model.addAttribute("estados", EstadoPedido.values());
+        return "admin/pedidos";
+    }
 
     return "redirect:/admin/pedidos/" + pedidoId;
 }
