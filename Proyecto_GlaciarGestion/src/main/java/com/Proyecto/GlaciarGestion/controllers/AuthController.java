@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.controller;
+package com.Proyecto.GlaciarGestion.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,8 +10,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.Proyecto.GlaciarGestion.dto.LoginRequest;
 import com.Proyecto.GlaciarGestion.dto.RegistroRequest;
-import com.Proyecto.GlaciarGestion.model.RolUsuario;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.RolUsuario;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.service.AuthService;
 import com.Proyecto.GlaciarGestion.service.BusinessException;
 import com.Proyecto.GlaciarGestion.web.SessionService;
@@ -97,3 +97,4 @@ public class AuthController {
         return "redirect:/login";
     }
 }
+

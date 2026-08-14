@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.model;
+package com.Proyecto.GlaciarGestion.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -93,3 +93,4 @@ public class Usuario {
         this.activo = activo;
     }
 }
+

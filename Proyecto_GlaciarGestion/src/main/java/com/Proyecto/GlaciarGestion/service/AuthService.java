@@ -5,8 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.Proyecto.GlaciarGestion.dto.LoginRequest;
 import com.Proyecto.GlaciarGestion.dto.RegistroRequest;
-import com.Proyecto.GlaciarGestion.model.RolUsuario;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.RolUsuario;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.repository.UsuarioRepository;
 
 @Service
@@ -57,3 +57,4 @@ public class AuthService {
             .orElseThrow(() -> new BusinessException("Usuario no encontrado."));
     }
 }
+

@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.model;
+package com.Proyecto.GlaciarGestion.domain;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -89,3 +89,4 @@ public class Pedido {
         this.estado = estado;
     }
 }
+

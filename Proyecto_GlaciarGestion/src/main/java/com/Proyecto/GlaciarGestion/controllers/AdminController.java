@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.controller;
+package com.Proyecto.GlaciarGestion.controllers;
 
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -12,15 +12,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.Proyecto.GlaciarGestion.dto.ProductoRequest;
-import com.Proyecto.GlaciarGestion.model.Producto;
-import com.Proyecto.GlaciarGestion.model.RolUsuario;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.Producto;
+import com.Proyecto.GlaciarGestion.domain.RolUsuario;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.service.BusinessException;
 import com.Proyecto.GlaciarGestion.service.ProductoService;
 import com.Proyecto.GlaciarGestion.web.SessionService;
-import com.Proyecto.GlaciarGestion.model.DetallePedido;
-import com.Proyecto.GlaciarGestion.model.EstadoPedido;
-import com.Proyecto.GlaciarGestion.model.Pedido;
+import com.Proyecto.GlaciarGestion.domain.DetallePedido;
+import com.Proyecto.GlaciarGestion.domain.EstadoPedido;
+import com.Proyecto.GlaciarGestion.domain.Pedido;
 import com.Proyecto.GlaciarGestion.service.PedidoService;
 
 import jakarta.servlet.http.HttpSession;
