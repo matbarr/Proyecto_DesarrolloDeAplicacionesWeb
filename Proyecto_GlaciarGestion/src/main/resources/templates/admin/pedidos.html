@@ -9,6 +9,10 @@
 
 <p>Usuario: <strong data-th-text="${usuario.nombre}"></strong></p>
 
+<form data-th-action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesion</button>
+</form>
+
 <p>
     <a data-th-href="@{/admin/productos}">Volver a productos</a>
 </p>

@@ -7,6 +7,10 @@
 <body>
 <h1 data-th-text="${modo == 'nuevo' ? 'Registrar producto' : 'Modificar producto'}"></h1>
 
+<form data-th-action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesion</button>
+</form>
+
 <p>
     <a data-th-href="@{/admin/productos}">Volver a productos</a>
 </p>
