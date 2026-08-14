@@ -2,24 +2,349 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Glaciar Gestion</title>
+    <style>
+        :root {
+            --navy: #172843;
+            --brand: #4b7fb8;
+            --brand-dark: #356a9f;
+            --surface: #ffffff;
+            --page-bg: #ecf1f8;
+            --text: #1f2f46;
+            --muted: #667b97;
+            --line: #b9c8da;
+            --danger-bg: #fdebee;
+            --danger-text: #9f2f3f;
+            --success-bg: #e9f7ef;
+            --success-text: #2f7f54;
+            --shadow: 0 12px 26px rgba(23, 40, 67, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background: linear-gradient(180deg, #f4f7fc 0%, var(--page-bg) 100%);
+        }
+
+        .topbar {
+            height: 74px;
+            background-color: var(--navy);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 0 28px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 42px;
+            line-height: 1;
+            color: #5caadf;
+        }
+
+        .brand-name {
+            font-size: 42px;
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .layout {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 52px 24px;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 620px;
+            margin: 0 auto;
+            background: var(--surface);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 44px 48px 36px;
+            border: 1px solid #dbe6f2;
+        }
+
+        .auth-title {
+            margin: 0;
+            text-align: center;
+            font-family: Georgia, "Times New Roman", serif;
+            font-size: 64px;
+            color: var(--navy);
+            letter-spacing: 0.3px;
+        }
+
+        .auth-subtitle {
+            text-align: center;
+            margin: 18px 0 34px;
+            color: var(--muted);
+            font-size: 37px;
+        }
+
+        .alert {
+            margin: 0 0 18px;
+            border-radius: 10px;
+            padding: 12px 14px;
+            font-size: 16px;
+        }
+
+        .alert-danger {
+            background: var(--danger-bg);
+            color: var(--danger-text);
+            border: 1px solid #f7cad2;
+        }
+
+        .alert-success {
+            background: var(--success-bg);
+            color: var(--success-text);
+            border: 1px solid #bde5cb;
+        }
+
+        .field {
+            margin-bottom: 24px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 34px;
+            font-weight: 700;
+            color: #20334d;
+            margin-bottom: 10px;
+        }
+
+        .input-wrap {
+            display: flex;
+            align-items: center;
+            border: 2px solid var(--line);
+            border-radius: 12px;
+            background: #fff;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .input-wrap:focus-within {
+            border-color: var(--brand);
+            box-shadow: 0 0 0 4px rgba(75, 127, 184, 0.14);
+        }
+
+        .icon {
+            width: 64px;
+            height: 64px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ba8bb;
+            flex-shrink: 0;
+            border-right: 1px solid #d7e1ee;
+            margin-right: 8px;
+        }
+
+        .icon svg {
+            width: 30px;
+            height: 30px;
+            fill: currentColor;
+        }
+
+        .input-wrap input {
+            flex: 1;
+            min-width: 0;
+            border: 0;
+            outline: 0;
+            font-size: 33px;
+            color: #1f3551;
+            padding: 18px 16px;
+            background: transparent;
+        }
+
+        .input-wrap input::placeholder {
+            color: #b8c6d8;
+        }
+
+        .field-error {
+            display: block;
+            margin-top: 8px;
+            color: #af3448;
+            font-size: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            border: 0;
+            border-radius: 14px;
+            background: var(--brand);
+            color: #fff;
+            font-size: 39px;
+            font-weight: 700;
+            padding: 19px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.16s ease;
+            margin-top: 4px;
+        }
+
+        .btn:hover {
+            background: var(--brand-dark);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .link-row {
+            margin-top: 22px;
+            text-align: center;
+        }
+
+        .link-row a {
+            color: #2f73bb;
+            font-size: 33px;
+            font-style: italic;
+            text-decoration: none;
+        }
+
+        .link-row a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 1100px) {
+            .brand,
+            .brand-name {
+                font-size: 34px;
+            }
+
+            .auth-card {
+                max-width: 560px;
+                padding: 36px 28px 30px;
+            }
+
+            .auth-title {
+                font-size: 52px;
+            }
+
+            .auth-subtitle {
+                font-size: 30px;
+                margin-bottom: 28px;
+            }
+
+            .field label {
+                font-size: 27px;
+            }
+
+            .input-wrap input,
+            .btn,
+            .link-row a {
+                font-size: 28px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .topbar {
+                padding: 0 14px;
+                height: auto;
+                min-height: 64px;
+                flex-wrap: wrap;
+                row-gap: 4px;
+            }
+
+            .layout {
+                padding: 22px 12px;
+            }
+
+            .auth-card {
+                padding: 24px 16px;
+                border-radius: 14px;
+            }
+
+            .auth-title {
+                font-size: 42px;
+            }
+
+            .auth-subtitle {
+                font-size: 24px;
+            }
+
+            .field label {
+                font-size: 20px;
+            }
+
+            .icon {
+                width: 52px;
+                height: 52px;
+            }
+
+            .icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .input-wrap input,
+            .btn,
+            .link-row a {
+                font-size: 22px;
+            }
+
+            .btn {
+                padding: 14px 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-<h1>Glaciar Gestion - Inicio de sesion</h1>
+<header class="topbar">
+    <div class="brand" aria-hidden="true">✶ <span class="brand-name">Glaciar Gestion</span></div>
+</header>
 
-<p th:if="${success}" th:text="${success}" style="color:green"></p>
-<p th:if="${error}" th:text="${error}" style="color:red"></p>
+<main class="layout">
+    <section class="auth-card" aria-labelledby="titulo-login">
+        <h1 id="titulo-login" class="auth-title">Iniciar sesion</h1>
+        <p class="auth-subtitle">Ingresa tus credenciales para continuar</p>
 
-<form th:action="@{/login}" th:object="${loginRequest}" method="post">
-    <label>Correo:</label>
-    <input type="email" th:field="*{correo}" required>
-    <br>
-    <label>Contrasena:</label>
-    <input type="password" th:field="*{contrasena}" required>
-    <br>
-    <button type="submit">Ingresar</button>
-</form>
+        <p class="alert alert-success" th:if="${success}" th:text="${success}"></p>
+        <p class="alert alert-danger" th:if="${error}" th:text="${error}"></p>
 
-<p><a th:href="@{/registro}">Crear cuenta de cliente</a></p>
+        <form th:action="@{/login}" th:object="${loginRequest}" method="post" novalidate>
+            <div class="field">
+                <label for="correo">Correo electronico</label>
+                <div class="input-wrap">
+                    <span class="icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"></path>
+                        </svg>
+                    </span>
+                    <input id="correo" type="email" th:field="*{correo}" placeholder="usuario@ejemplo.com" autocomplete="email" required>
+                </div>
+                <small class="field-error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></small>
+            </div>
+
+            <div class="field">
+                <label for="contrasena">Contrasena</label>
+                <div class="input-wrap">
+                    <span class="icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 8h-1V6a4 4 0 1 0-8 0v2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-7-2a2 2 0 1 1 4 0v2h-4V6zm2 10a2 2 0 0 1-1-3.73V11h2v1.27A2 2 0 0 1 12 16z"></path>
+                        </svg>
+                    </span>
+                    <input id="contrasena" type="password" th:field="*{contrasena}" placeholder="********" autocomplete="current-password" required>
+                </div>
+                <small class="field-error" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></small>
+            </div>
+
+            <button type="submit" class="btn">Ingresar</button>
+        </form>
+
+        <p class="link-row">
+            <a th:href="@{/registro}">No tienes cuenta? Registrate aqui</a>
+        </p>
+    </section>
+</main>
 </body>
 </html>
