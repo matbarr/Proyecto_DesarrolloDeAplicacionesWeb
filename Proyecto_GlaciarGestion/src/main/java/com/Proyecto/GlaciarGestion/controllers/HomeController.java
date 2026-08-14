@@ -1,10 +1,10 @@
-package com.Proyecto.GlaciarGestion.controller;
+package com.Proyecto.GlaciarGestion.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import com.Proyecto.GlaciarGestion.model.RolUsuario;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.RolUsuario;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.web.SessionService;
 
 import jakarta.servlet.http.HttpSession;
@@ -32,3 +32,4 @@ public class HomeController {
         return "redirect:/cliente/productos";
     }
 }
+

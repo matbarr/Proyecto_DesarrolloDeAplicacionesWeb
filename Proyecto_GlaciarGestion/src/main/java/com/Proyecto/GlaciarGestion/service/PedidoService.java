@@ -7,13 +7,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.Proyecto.GlaciarGestion.model.DetalleCarrito;
-import com.Proyecto.GlaciarGestion.model.DetallePedido;
-import com.Proyecto.GlaciarGestion.model.DireccionEntrega;
-import com.Proyecto.GlaciarGestion.model.EstadoPedido;
-import com.Proyecto.GlaciarGestion.model.Pedido;
-import com.Proyecto.GlaciarGestion.model.Producto;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.DetalleCarrito;
+import com.Proyecto.GlaciarGestion.domain.DetallePedido;
+import com.Proyecto.GlaciarGestion.domain.DireccionEntrega;
+import com.Proyecto.GlaciarGestion.domain.EstadoPedido;
+import com.Proyecto.GlaciarGestion.domain.Pedido;
+import com.Proyecto.GlaciarGestion.domain.Producto;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.repository.DetallePedidoRepository;
 import com.Proyecto.GlaciarGestion.repository.PedidoRepository;
 import com.Proyecto.GlaciarGestion.repository.ProductoRepository;
@@ -133,3 +133,4 @@ public void actualizarEstado(Long pedidoId, EstadoPedido estado) {
     pedidoRepository.save(pedido);
 }
 }
+

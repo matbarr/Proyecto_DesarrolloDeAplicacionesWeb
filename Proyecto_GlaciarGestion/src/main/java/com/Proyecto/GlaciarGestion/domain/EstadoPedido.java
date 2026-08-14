@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.model;
+package com.Proyecto.GlaciarGestion.domain;
 
 public enum EstadoPedido {
     PENDIENTE,
@@ -6,3 +6,4 @@ public enum EstadoPedido {
     LISTO,
     ENTREGADO
 }
+

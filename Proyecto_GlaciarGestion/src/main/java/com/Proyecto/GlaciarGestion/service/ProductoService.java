@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.Proyecto.GlaciarGestion.dto.ProductoRequest;
-import com.Proyecto.GlaciarGestion.model.Producto;
+import com.Proyecto.GlaciarGestion.domain.Producto;
 import com.Proyecto.GlaciarGestion.repository.ProductoRepository;
 
 @Service
@@ -89,3 +89,4 @@ public ProductoRequest crearRequestDesdeProducto(Producto producto) {
     return request;
 }
 }
+

@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.model;
+package com.Proyecto.GlaciarGestion.domain;
 
 import java.time.LocalDateTime;
 
@@ -51,3 +51,4 @@ public class Carrito {
         this.creadoEn = creadoEn;
     }
 }
+

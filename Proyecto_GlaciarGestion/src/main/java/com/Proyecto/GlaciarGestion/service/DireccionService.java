@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.Proyecto.GlaciarGestion.dto.DireccionRequest;
-import com.Proyecto.GlaciarGestion.model.DireccionEntrega;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.DireccionEntrega;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.repository.DireccionEntregaRepository;
 
 @Service
@@ -47,3 +47,4 @@ public class DireccionService {
         return direccion;
     }
 }
+

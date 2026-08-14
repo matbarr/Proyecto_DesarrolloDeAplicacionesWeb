@@ -2,8 +2,8 @@ package com.Proyecto.GlaciarGestion.web;
 
 import org.springframework.stereotype.Component;
 
-import com.Proyecto.GlaciarGestion.model.RolUsuario;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.RolUsuario;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.service.AuthService;
 import com.Proyecto.GlaciarGestion.service.BusinessException;
 
@@ -51,3 +51,4 @@ public class SessionService {
         return role instanceof String && rol.name().equals(role);
     }
 }
+

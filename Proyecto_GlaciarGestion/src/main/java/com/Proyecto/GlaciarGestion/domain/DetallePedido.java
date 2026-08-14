@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.model;
+package com.Proyecto.GlaciarGestion.domain;
 
 import java.math.BigDecimal;
 
@@ -74,3 +74,4 @@ public class DetallePedido {
         this.precioUnitario = precioUnitario;
     }
 }
+

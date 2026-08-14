@@ -1,4 +1,4 @@
-package com.Proyecto.GlaciarGestion.controller;
+package com.Proyecto.GlaciarGestion.controllers;
 
 import java.util.List;
 
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.Proyecto.GlaciarGestion.dto.AgregarCarritoRequest;
 import com.Proyecto.GlaciarGestion.dto.CarritoResumenView;
 import com.Proyecto.GlaciarGestion.dto.DireccionRequest;
-import com.Proyecto.GlaciarGestion.model.DetallePedido;
-import com.Proyecto.GlaciarGestion.model.Pedido;
-import com.Proyecto.GlaciarGestion.model.Producto;
-import com.Proyecto.GlaciarGestion.model.RolUsuario;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.DetallePedido;
+import com.Proyecto.GlaciarGestion.domain.Pedido;
+import com.Proyecto.GlaciarGestion.domain.Producto;
+import com.Proyecto.GlaciarGestion.domain.RolUsuario;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.service.BusinessException;
 import com.Proyecto.GlaciarGestion.service.CarritoService;
 import com.Proyecto.GlaciarGestion.service.DireccionService;
@@ -283,3 +283,4 @@ public String eliminarDelCarrito(
         return sessionService.obtenerUsuario(session);
     }
 }
+

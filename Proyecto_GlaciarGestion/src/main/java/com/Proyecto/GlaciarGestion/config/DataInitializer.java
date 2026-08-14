@@ -6,9 +6,9 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.Proyecto.GlaciarGestion.model.Producto;
-import com.Proyecto.GlaciarGestion.model.RolUsuario;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.Producto;
+import com.Proyecto.GlaciarGestion.domain.RolUsuario;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.repository.ProductoRepository;
 import com.Proyecto.GlaciarGestion.repository.UsuarioRepository;
 
@@ -47,3 +47,4 @@ public class DataInitializer {
         return producto;
     }
 }
+
