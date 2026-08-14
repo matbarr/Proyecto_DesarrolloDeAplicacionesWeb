@@ -92,8 +92,9 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public String logout(HttpSession session) {
+    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         sessionService.cerrarSesion(session);
+        redirectAttributes.addFlashAttribute("success", "Sesion cerrada correctamente.");
         return "redirect:/login";
     }
 }

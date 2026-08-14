@@ -7,6 +7,10 @@
 <body>
 <h1>Detalle del pedido</h1>
 
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Cerrar sesion</button>
+</form>
+
 <p><a th:href="@{/cliente/pedidos}">Volver a pedidos</a></p>
 
 <p><strong>Pedido #:</strong> <span th:text="${pedido.id}"></span></p>
