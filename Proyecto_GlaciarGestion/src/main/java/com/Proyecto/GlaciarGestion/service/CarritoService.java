@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.Proyecto.GlaciarGestion.dto.CarritoItemView;
 import com.Proyecto.GlaciarGestion.dto.CarritoResumenView;
-import com.Proyecto.GlaciarGestion.model.Carrito;
-import com.Proyecto.GlaciarGestion.model.DetalleCarrito;
-import com.Proyecto.GlaciarGestion.model.Producto;
-import com.Proyecto.GlaciarGestion.model.Usuario;
+import com.Proyecto.GlaciarGestion.domain.Carrito;
+import com.Proyecto.GlaciarGestion.domain.DetalleCarrito;
+import com.Proyecto.GlaciarGestion.domain.Producto;
+import com.Proyecto.GlaciarGestion.domain.Usuario;
 import com.Proyecto.GlaciarGestion.repository.CarritoRepository;
 import com.Proyecto.GlaciarGestion.repository.DetalleCarritoRepository;
 
@@ -156,9 +156,4 @@ public class CarritoService {
                 return carritoRepository.save(carrito);
             });
     }
-
-    public void modificarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }
-
