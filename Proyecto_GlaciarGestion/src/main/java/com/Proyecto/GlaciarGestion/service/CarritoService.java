@@ -61,7 +61,7 @@ public class CarritoService {
     }
 
     @Transactional
-    public void modificarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
+    public void actualizarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
         if (cantidad == null || cantidad <= 0) {
             throw new BusinessException("La cantidad debe ser mayor que cero.");
         }
@@ -83,6 +83,21 @@ public class CarritoService {
 
         detalle.setCantidad(cantidad);
         detalleCarritoRepository.save(detalle);
+    }
+
+    @Transactional
+    public void eliminarProducto(Usuario usuario, Long detalleId) {
+        Carrito carrito = carritoRepository.findByUsuario(usuario)
+            .orElseThrow(() -> new BusinessException("El carrito esta vacio."));
+
+        DetalleCarrito detalle = detalleCarritoRepository.findById(detalleId)
+            .orElseThrow(() -> new BusinessException("El producto no existe en el carrito."));
+
+        if (!detalle.getCarrito().getId().equals(carrito.getId())) {
+            throw new BusinessException("El producto no pertenece a tu carrito.");
+        }
+
+        detalleCarritoRepository.delete(detalle);
     }
 
     @Transactional(readOnly = true)
@@ -140,6 +155,10 @@ public class CarritoService {
                 carrito.setCreadoEn(LocalDateTime.now());
                 return carritoRepository.save(carrito);
             });
+    }
+
+    public void modificarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
 
