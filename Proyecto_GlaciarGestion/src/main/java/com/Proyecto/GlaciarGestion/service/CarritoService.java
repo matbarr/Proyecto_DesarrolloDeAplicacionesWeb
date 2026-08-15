@@ -9,10 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.Proyecto.GlaciarGestion.dto.CarritoItemView;
 import com.Proyecto.GlaciarGestion.dto.CarritoResumenView;
-import com.Proyecto.GlaciarGestion.domain.Carrito;
-import com.Proyecto.GlaciarGestion.domain.DetalleCarrito;
-import com.Proyecto.GlaciarGestion.domain.Producto;
-import com.Proyecto.GlaciarGestion.domain.Usuario;
+import com.Proyecto.GlaciarGestion.model.Carrito;
+import com.Proyecto.GlaciarGestion.model.DetalleCarrito;
+import com.Proyecto.GlaciarGestion.model.Producto;
+import com.Proyecto.GlaciarGestion.model.Usuario;
 import com.Proyecto.GlaciarGestion.repository.CarritoRepository;
 import com.Proyecto.GlaciarGestion.repository.DetalleCarritoRepository;
 
@@ -59,40 +59,31 @@ public class CarritoService {
         detalle.setCantidad(nuevaCantidad);
         detalleCarritoRepository.save(detalle);
     }
+
     @Transactional
-public void actualizarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
-    if (cantidad == null || cantidad <= 0) {
-        throw new BusinessException("La cantidad debe ser mayor que cero.");
+    public void modificarCantidad(Usuario usuario, Long detalleId, Integer cantidad) {
+        if (cantidad == null || cantidad <= 0) {
+            throw new BusinessException("La cantidad debe ser mayor que cero.");
+        }
+
+        Carrito carrito = carritoRepository.findByUsuario(usuario)
+            .orElseThrow(() -> new BusinessException("El carrito esta vacio."));
+
+        DetalleCarrito detalle = detalleCarritoRepository.findById(detalleId)
+            .orElseThrow(() -> new BusinessException("El producto no existe en el carrito."));
+
+        if (!detalle.getCarrito().getId().equals(carrito.getId())) {
+            throw new BusinessException("El producto no pertenece a tu carrito.");
+        }
+
+        Producto producto = detalle.getProducto();
+        if (cantidad > producto.getCantidad()) {
+            throw new BusinessException("No se puede asignar una cantidad superior a la disponible.");
+        }
+
+        detalle.setCantidad(cantidad);
+        detalleCarritoRepository.save(detalle);
     }
-
-    DetalleCarrito detalle = detalleCarritoRepository.findById(detalleId)
-        .orElseThrow(() -> new BusinessException("El producto no existe en el carrito."));
-
-    if (!detalle.getCarrito().getUsuario().getId().equals(usuario.getId())) {
-        throw new BusinessException("No tiene permiso para modificar este carrito.");
-    }
-
-    Producto producto = detalle.getProducto();
-
-    if (cantidad > producto.getCantidad()) {
-        throw new BusinessException("No hay suficiente inventario disponible.");
-    }
-
-    detalle.setCantidad(cantidad);
-    detalleCarritoRepository.save(detalle);
-}
-
-@Transactional
-public void eliminarProducto(Usuario usuario, Long detalleId) {
-    DetalleCarrito detalle = detalleCarritoRepository.findById(detalleId)
-        .orElseThrow(() -> new BusinessException("El producto no existe en el carrito."));
-
-    if (!detalle.getCarrito().getUsuario().getId().equals(usuario.getId())) {
-        throw new BusinessException("No tiene permiso para eliminar este producto.");
-    }
-
-    detalleCarritoRepository.delete(detalle);
-}
 
     @Transactional(readOnly = true)
     public CarritoResumenView obtenerResumen(Usuario usuario) {
