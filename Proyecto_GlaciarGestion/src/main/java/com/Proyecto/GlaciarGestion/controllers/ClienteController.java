@@ -197,6 +197,7 @@ public String eliminarDelCarrito(
         }
 
         if (bindingResult.hasErrors()) {
+            model.addAttribute("usuario", usuario);
             model.addAttribute("resumen", carritoService.obtenerResumen(usuario));
             model.addAttribute("direcciones", direccionService.listarPorUsuario(usuario));
             return "cliente/carrito";
@@ -234,6 +235,7 @@ public String eliminarDelCarrito(
         }
 
         List<Pedido> pedidos = pedidoService.listarPedidosCliente(usuario);
+        model.addAttribute("usuario", usuario);
         model.addAttribute("pedidos", pedidos);
         return "cliente/pedidos";
     }
@@ -247,9 +249,11 @@ public String eliminarDelCarrito(
 
         try {
             Pedido pedido = pedidoService.obtenerPedidoCliente(pedidoId, usuario);
+            model.addAttribute("usuario", usuario);
             model.addAttribute("pedido", pedido);
             return "cliente/estado-pedido";
         } catch (BusinessException ex) {
+            model.addAttribute("usuario", usuario);
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("pedidos", pedidoService.listarPedidosCliente(usuario));
             return "cliente/pedidos";
@@ -266,10 +270,12 @@ public String eliminarDelCarrito(
         try {
             Pedido pedido = pedidoService.obtenerPedidoCliente(pedidoId, usuario);
             List<DetallePedido> detalles = pedidoService.obtenerDetallesPedidoCliente(pedidoId, usuario);
+            model.addAttribute("usuario", usuario);
             model.addAttribute("pedido", pedido);
             model.addAttribute("detalles", detalles);
             return "cliente/detalle-pedido";
         } catch (BusinessException ex) {
+            model.addAttribute("usuario", usuario);
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("pedidos", pedidoService.listarPedidosCliente(usuario));
             return "cliente/pedidos";
