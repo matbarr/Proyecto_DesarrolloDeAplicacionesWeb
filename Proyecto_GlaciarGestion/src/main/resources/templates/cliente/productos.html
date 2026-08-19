@@ -45,8 +45,12 @@
                 <div class="product-image-wrap">
                     <img
                         class="product-image"
-                        th:src="${#strings.containsIgnoreCase(producto.nombre, 'tritur') ? '/img/hielo-triturado.svg' : (#strings.containsIgnoreCase(producto.nombre, 'bloque') ? '/img/hielo-bloque.svg' : '/img/hielo-cubitos.svg')}"
-                        th:alt="${producto.nombre}">
+                        th:src="${#strings.containsIgnoreCase(producto.nombre, 'escama')
+                           ? '/img/escama.png'
+                           : (#strings.containsIgnoreCase(producto.nombre, 'copo')
+                           ? '/img/copos.png'
+                           : '/img/cubos.jpg')}"
+                           th:alt="${producto.nombre}">
                     <span class="product-badge" th:if="${stat.first}">Más Popular</span>
                 </div>
                 <div class="product-card-body">
