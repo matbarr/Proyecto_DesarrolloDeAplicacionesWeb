@@ -15,6 +15,7 @@
         <div class="nav-links">
             <a th:href="@{/admin/productos}">Productos</a>
             <a th:href="@{/admin/pedidos}" class="active">Pedidos</a>
+            <a th:href="@{/admin/consultas}">Consultas</a>
         </div>
         <div class="nav-right">
             <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
@@ -53,6 +54,10 @@
                         <span class="info-label">Estado</span>
                         <span th:class="|badge badge-${pedido.estado}|"
                               th:text="${pedido.estado}"></span>
+                    </div>
+                    <div class="info-item" th:if="${pedido.observaciones != null and !#strings.isEmpty(pedido.observaciones)}" style="grid-column:1/-1">
+                        <span class="info-label">Observaciones</span>
+                        <span class="info-value" th:text="${pedido.observaciones}"></span>
                     </div>
                 </div>
             </div>
