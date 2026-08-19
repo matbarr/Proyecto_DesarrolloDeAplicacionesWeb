@@ -54,6 +54,17 @@ public class ClienteController {
         this.pedidoService = pedidoService;
     }
 
+    @GetMapping("/inicio")
+    public String inicio(HttpSession session, Model model) {
+        Usuario usuario = clienteAutenticado(session);
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("usuario", usuario);
+        return "cliente/inicio";
+    }
+
     @GetMapping("/productos")
     public String productos(HttpSession session, Model model) {
         Usuario usuario = clienteAutenticado(session);

@@ -29,7 +29,7 @@ public class HomeController {
             return "redirect:/admin/productos";
         }
 
-        return "redirect:/cliente/productos";
+        return "redirect:/cliente/inicio";
     }
 }
 

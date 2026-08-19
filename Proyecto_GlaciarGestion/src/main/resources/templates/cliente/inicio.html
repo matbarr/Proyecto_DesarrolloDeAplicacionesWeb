@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/inicio}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/inicio}" class="active">Inicio</a>
+            <a th:href="@{/cliente/productos}">Catálogo</a>
+            <a th:href="@{/cliente/carrito}">Carrito</a>
+            <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="hero-page">
+    <div class="container hero-container">
+        <section class="hero-card">
+            <span class="hero-badge">Calidad Premium</span>
+            <h1 class="hero-title">Pureza en cada Cristal, Frescura en cada Momento</h1>
+            <p class="hero-description">
+                Hielo producido con los más altos estándares de purificación.
+                Garantizamos el frío perfecto para tus bebidas, eventos y negocios.
+            </p>
+            <div class="hero-actions">
+                <a class="btn-action btn-primary hero-cta" th:href="@{/cliente/carrito}">Pide tu Hielo Ahora</a>
+                <a class="btn-action btn-outline hero-secondary" th:href="@{/cliente/productos}">Ver Productos</a>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

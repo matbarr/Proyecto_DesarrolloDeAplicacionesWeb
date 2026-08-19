@@ -9,10 +9,11 @@
 <body>
 <nav class="navbar">
     <div class="container">
-        <a class="nav-brand" th:href="@{/cliente/productos}">
+        <a class="nav-brand" th:href="@{/cliente/inicio}">
             <span class="snowflake">❄</span> Glaciar Gestión
         </a>
         <div class="nav-links">
+            <a th:href="@{/cliente/inicio}">Inicio</a>
             <a th:href="@{/cliente/productos}" class="active">Catálogo</a>
             <a th:href="@{/cliente/carrito}">Carrito</a>
             <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
@@ -28,28 +29,34 @@
 
 <div class="page">
     <div class="container">
-        <div class="page-header">
-            <h1 class="page-title">Catálogo de Productos</h1>
+        <div class="products-header">
+            <h1 class="products-title">Nuestros Productos</h1>
+            <p class="products-subtitle">
+                Soluciones de frío adaptadas a cada necesidad, desde coctelería fina hasta
+                conservación industrial.
+            </p>
         </div>
 
         <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
 
         <div class="products-grid">
-            <div class="product-card" th:each="producto : ${productos}">
+            <div class="product-card" th:each="producto, stat : ${productos}">
+                <div class="product-image-wrap">
+                    <img
+                        class="product-image"
+                        th:src="${#strings.containsIgnoreCase(producto.nombre, 'tritur') ? '/img/hielo-triturado.svg' : (#strings.containsIgnoreCase(producto.nombre, 'bloque') ? '/img/hielo-bloque.svg' : '/img/hielo-cubitos.svg')}"
+                        th:alt="${producto.nombre}">
+                    <span class="product-badge" th:if="${stat.first}">Más Popular</span>
+                </div>
                 <div class="product-card-body">
                     <div class="product-card-name" th:text="${producto.nombre}"></div>
                     <div class="product-card-pres" th:text="${producto.presentacion}"></div>
-                    <div class="product-card-price" th:text="|₡${producto.precio}|"></div>
-                    <div class="product-card-stock" th:text="'Stock: ' + ${producto.cantidad}"></div>
+                    <p class="product-card-description"
+                       th:text="${#strings.containsIgnoreCase(producto.nombre, 'tritur') ? 'Especial para frappes, smoothies y exhibición de mariscos. Enfriamiento rápido e instantáneo.' : (#strings.containsIgnoreCase(producto.nombre, 'bloque') ? 'Para necesidades de frío prolongado. Ideal para tallado de esculturas o conservación industrial de larga duración.' : 'El clásico perfecto para bebidas. Larga duración y cristalino, ideal para uso diario y coctelería estándar.')}">
+                    </p>
                 </div>
                 <div class="product-card-footer">
-                    <a class="btn-sm btn-outline" th:href="@{/cliente/productos/{id}(id=${producto.id})}">Ver detalle</a>
-                    <form th:action="@{/cliente/carrito/agregar}" method="post" class="form-inline" style="flex:1;display:flex;gap:6px;align-items:center">
-                        <input type="hidden" name="productoId" th:value="${producto.id}">
-                        <input type="number" name="cantidad" min="1" value="1" required
-                               style="width:52px;padding:5px 6px;border:1.5px solid #c8d9eb;border-radius:6px;font-size:13px;text-align:center;font-family:inherit">
-                        <button type="submit" class="btn-sm btn-primary">+ Carrito</button>
-                    </form>
+                    <a class="btn-sm btn-outline product-quote-btn" th:href="@{/cliente/productos/{id}(id=${producto.id})}">Solicitar Cotización</a>
                 </div>
             </div>
         </div>

@@ -55,7 +55,7 @@ public class AuthController {
             if (usuario.getRol() == RolUsuario.ADMINISTRADOR) {
                 return "redirect:/admin/productos";
             }
-            return "redirect:/cliente/productos";
+            return "redirect:/cliente/inicio";
         } catch (BusinessException ex) {
             model.addAttribute("error", ex.getMessage());
             return "login";
