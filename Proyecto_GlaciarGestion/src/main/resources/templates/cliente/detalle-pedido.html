@@ -17,6 +17,7 @@
             <a th:href="@{/cliente/productos}">Catálogo</a>
             <a th:href="@{/cliente/carrito}">Carrito</a>
             <a th:href="@{/cliente/pedidos}" class="active">Mis Pedidos</a>
+            <a th:href="@{/cliente/consultas}">Consultas</a>
         </div>
         <div class="nav-right">
             <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
@@ -48,6 +49,10 @@
                 <div class="info-item">
                     <span class="info-label">Total</span>
                     <span class="info-value" th:text="|₡${pedido.total}|"></span>
+                </div>
+                <div class="info-item" th:if="${pedido.observaciones != null and !#strings.isEmpty(pedido.observaciones)}" style="grid-column:1/-1">
+                    <span class="info-label">Observaciones</span>
+                    <span class="info-value" th:text="${pedido.observaciones}"></span>
                 </div>
             </div>
         </div>

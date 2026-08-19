@@ -41,6 +41,9 @@ public class Pedido {
     @Column(nullable = false)
     private EstadoPedido estado;
 
+    @Column(length = 600)
+    private String observaciones;
+
     public Long getId() {
         return id;
     }
@@ -87,6 +90,14 @@ public class Pedido {
 
     public void setEstado(EstadoPedido estado) {
         this.estado = estado;
+    }
+
+    public String getObservaciones() {
+        return observaciones;
+    }
+
+    public void setObservaciones(String observaciones) {
+        this.observaciones = observaciones;
     }
 }
 

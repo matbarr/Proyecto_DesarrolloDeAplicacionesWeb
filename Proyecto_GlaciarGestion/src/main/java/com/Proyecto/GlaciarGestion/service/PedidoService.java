@@ -87,6 +87,56 @@ public class PedidoService {
         return pedidoGuardado;
     }
 
+    @Transactional
+    public Pedido crearPedidoManualAdmin(
+        Usuario cliente,
+        Long productoId,
+        Integer cantidad,
+        Long direccionId,
+        String observaciones
+    ) {
+        if (cantidad == null || cantidad <= 0) {
+            throw new BusinessException("La cantidad debe ser mayor que cero.");
+        }
+
+        DireccionEntrega direccion = direccionService.obtenerDireccionDelUsuario(direccionId, cliente);
+        Producto producto = productoRepository.findById(productoId)
+            .orElseThrow(() -> new BusinessException("Producto no encontrado."));
+
+        if (!producto.isActivo()) {
+            throw new BusinessException("El producto seleccionado esta inactivo.");
+        }
+
+        if (cantidad > producto.getCantidad()) {
+            throw new BusinessException("Stock insuficiente para " + producto.getNombre() + ".");
+        }
+
+        BigDecimal total = producto.getPrecio().multiply(BigDecimal.valueOf(cantidad));
+
+        Pedido pedido = new Pedido();
+        pedido.setUsuario(cliente);
+        pedido.setDireccionEntrega(direccion);
+        pedido.setFecha(LocalDateTime.now());
+        pedido.setTotal(total);
+        pedido.setEstado(EstadoPedido.PENDIENTE);
+        if (observaciones != null && !observaciones.trim().isEmpty()) {
+            pedido.setObservaciones(observaciones.trim());
+        }
+        Pedido pedidoGuardado = pedidoRepository.save(pedido);
+
+        producto.setCantidad(producto.getCantidad() - cantidad);
+        productoRepository.save(producto);
+
+        DetallePedido detallePedido = new DetallePedido();
+        detallePedido.setPedido(pedidoGuardado);
+        detallePedido.setProducto(producto);
+        detallePedido.setCantidad(cantidad);
+        detallePedido.setPrecioUnitario(producto.getPrecio());
+        detallePedidoRepository.save(detallePedido);
+
+        return pedidoGuardado;
+    }
+
     @Transactional(readOnly = true)
     public List<Pedido> listarPedidosCliente(Usuario usuario) {
         return pedidoRepository.findByUsuarioOrderByFechaDesc(usuario);

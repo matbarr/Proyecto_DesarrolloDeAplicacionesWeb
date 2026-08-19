@@ -709,6 +709,151 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; 
   background: #f4f8ff;
 }
 
+/* Consultas chat */
+.chat-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.chat-layout.admin {
+  grid-template-columns: 340px 1fr;
+}
+
+.chat-sidebar,
+.chat-main {
+  min-width: 0;
+}
+
+.chat-thread-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-thread-item {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+  background: #f9fcff;
+}
+
+.chat-thread-item strong {
+  color: var(--navy);
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chat-thread-item span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.chat-thread-state {
+  color: #4f6885;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.chat-unread-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: #0077b6;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.chat-thread-item.active {
+  border-color: var(--brand);
+  background: #edf8fc;
+}
+
+.chat-thread-item:hover {
+  text-decoration: none;
+  border-color: #8bb9d8;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chat-messages {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 470px;
+  overflow-y: auto;
+  background: #f6fbff;
+}
+
+.chat-message {
+  max-width: 84%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #d8e8f3;
+}
+
+.chat-message p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
+.chat-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.chat-meta strong {
+  font-size: 12px;
+  color: var(--navy);
+}
+
+.chat-meta span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.chat-message.own {
+  margin-left: auto;
+  background: #dff2fb;
+  border-color: #a7d2e5;
+}
+
+.chat-message.admin {
+  margin-right: auto;
+}
+
+.chat-message.customer {
+  margin-right: auto;
+  background: #ffffff;
+}
+
+.chat-message.own .chat-meta strong {
+  color: #084b73;
+}
+
 /* =========================================
    RESPONSIVE
    ========================================= */
@@ -727,6 +872,10 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; 
   .hero-page     { padding: 34px 0; min-height: auto; }
   .hero-card     { padding: 26px 22px; }
   .hero-description { font-size: 17px; }
+  .chat-layout,
+  .chat-layout.admin { grid-template-columns: 1fr; }
+  .chat-messages { max-height: 360px; }
+  .chat-message { max-width: 100%; }
 }
 @media (max-width: 480px) {
   .products-grid { grid-template-columns: 1fr; }
