@@ -2,47 +2,58 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Productos - Cliente</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1>Catalogo de productos</h1>
-<p>Cliente: <strong th:text="${usuario.nombre}"></strong></p>
-
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar sesion</button>
-</form>
-
-<p><a th:href="@{/cliente/carrito}">Ver carrito</a> | <a th:href="@{/cliente/pedidos}">Mis pedidos</a></p>
-
-<p th:if="${error}" th:text="${error}" style="color:red"></p>
-
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>Nombre</th>
-        <th>Presentacion</th>
-        <th>Precio</th>
-        <th>Cantidad disponible</th>
-        <th>Detalle</th>
-        <th>Agregar al carrito</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="producto : ${productos}">
-        <td th:text="${producto.nombre}"></td>
-        <td th:text="${producto.presentacion}"></td>
-        <td th:text="${producto.precio}"></td>
-        <td th:text="${producto.cantidad}"></td>
-        <td><a th:href="@{'/cliente/productos/' + ${producto.id}}">Ver detalle</a></td>
-        <td>
-            <form th:action="@{/cliente/carrito/agregar}" method="post">
-                <input type="hidden" name="productoId" th:value="${producto.id}">
-                <input type="number" name="cantidad" min="1" value="1" required>
-                <button type="submit">Agregar</button>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/productos}" class="active">Catálogo</a>
+            <a th:href="@{/cliente/carrito}">Carrito</a>
+            <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Catálogo de Productos</h1>
+        </div>
+
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="products-grid">
+            <div class="product-card" th:each="producto : ${productos}">
+                <div class="product-card-body">
+                    <div class="product-card-name" th:text="${producto.nombre}"></div>
+                    <div class="product-card-pres" th:text="${producto.presentacion}"></div>
+                    <div class="product-card-price" th:text="|₡${producto.precio}|"></div>
+                    <div class="product-card-stock" th:text="'Stock: ' + ${producto.cantidad}"></div>
+                </div>
+                <div class="product-card-footer">
+                    <a class="btn-sm btn-outline" th:href="@{/cliente/productos/{id}(id=${producto.id})}">Ver detalle</a>
+                    <form th:action="@{/cliente/carrito/agregar}" method="post" class="form-inline" style="flex:1;display:flex;gap:6px;align-items:center">
+                        <input type="hidden" name="productoId" th:value="${producto.id}">
+                        <input type="number" name="cantidad" min="1" value="1" required
+                               style="width:52px;padding:5px 6px;border:1.5px solid #c8d9eb;border-radius:6px;font-size:13px;text-align:center;font-family:inherit">
+                        <button type="submit" class="btn-sm btn-primary">+ Carrito</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

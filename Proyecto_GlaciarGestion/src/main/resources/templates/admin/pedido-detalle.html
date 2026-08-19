@@ -1,67 +1,113 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Detalle de pedido - Administrador</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Pedido – Admin | Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1>Detalle del pedido</h1>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/admin/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/admin/productos}">Productos</a>
+            <a th:href="@{/admin/pedidos}" class="active">Pedidos</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
 
-<p>Usuario: <strong data-th-text="${usuario.nombre}"></strong></p>
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title" th:text="'Pedido #' + ${pedido.id}"></h1>
+            <a th:href="@{/admin/pedidos}" class="btn-sm btn-outline">← Volver a pedidos</a>
+        </div>
 
-<form data-th-action="@{/logout}" method="post">
-    <button type="submit">Cerrar sesion</button>
-</form>
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
 
-<p>
-    <a data-th-href="@{/admin/pedidos}">Volver a pedidos</a>
-</p>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;align-items:start">
+            <div class="card">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Cliente</span>
+                        <span class="info-value" th:text="${pedido.usuario.nombre}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha</span>
+                        <span class="info-value" th:text="${pedido.fecha}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total</span>
+                        <span class="info-value" th:text="|₡${pedido.total}|"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estado</span>
+                        <span th:class="|badge badge-${pedido.estado}|"
+                              th:text="${pedido.estado}"></span>
+                    </div>
+                </div>
+            </div>
 
-<p data-th-if="${error}" data-th-text="${error}" style="color:red"></p>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">Actualizar estado</p>
+                    <form th:action="@{/admin/pedidos/{id}/estado(id=${pedido.id})}" method="post">
+                        <div class="form-group">
+                            <label for="estado">Nuevo estado</label>
+                            <select id="estado" name="estado" required>
+                                <option th:each="estadoItem : ${estados}"
+                                        th:value="${estadoItem}"
+                                        th:text="${estadoItem}"
+                                        th:selected="${estadoItem == pedido.estado}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-action btn-teal" style="width:100%">Guardar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-<section>
-    <p>ID pedido: <strong data-th-text="${pedido.id}"></strong></p>
-    <p>Cliente: <strong data-th-text="${pedido.usuario.nombre}"></strong></p>
-    <p>Fecha: <strong data-th-text="${pedido.fecha}"></strong></p>
-    <p>Total: <strong data-th-text="${pedido.total}"></strong></p>
-    <p>Estado actual: <strong data-th-text="${pedido.estado}"></strong></p>
-</section>
-
-<h2>Actualizar estado</h2>
-<form data-th-action="@{'/admin/pedidos/' + ${pedido.id} + '/estado'}" method="post">
-    <label>Nuevo estado:</label>
-    <select name="estado" required>
-        <option data-th-each="estadoItem : ${estados}"
-                data-th-value="${estadoItem}"
-                data-th-text="${estadoItem}"
-                data-th-selected="${estadoItem == pedido.estado}">
-        </option>
-    </select>
-    <button type="submit">Guardar estado</button>
-</form>
-
-<h2>Productos del pedido</h2>
-
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>Producto</th>
-        <th>Presentacion</th>
-        <th>Cantidad</th>
-        <th>Precio unitario</th>
-        <th>Subtotal</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr data-th-each="detalle : ${detalles}">
-        <td data-th-text="${detalle.producto.nombre}"></td>
-        <td data-th-text="${detalle.producto.presentacion}"></td>
-        <td data-th-text="${detalle.cantidad}"></td>
-        <td data-th-text="${detalle.precioUnitario}"></td>
-        <td data-th-text="${detalle.precioUnitario * detalle.cantidad}"></td>
-    </tr>
-    </tbody>
-</table>
+        <div class="card" style="margin-top:20px">
+            <div class="card-body" style="padding-bottom:0">
+                <p class="card-title">Productos del pedido</p>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Presentación</th>
+                            <th>Cantidad</th>
+                            <th>Precio unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="detalle : ${detalles}">
+                            <td th:text="${detalle.producto.nombre}"></td>
+                            <td th:text="${detalle.producto.presentacion}"></td>
+                            <td th:text="${detalle.cantidad}"></td>
+                            <td th:text="|₡${detalle.precioUnitario}|"></td>
+                            <td th:text="|₡${detalle.precioUnitario * detalle.cantidad}|"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="total-row">
+                <span class="total-label">Total del pedido</span>
+                <span class="total-value" th:text="|₡${pedido.total}|"></span>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

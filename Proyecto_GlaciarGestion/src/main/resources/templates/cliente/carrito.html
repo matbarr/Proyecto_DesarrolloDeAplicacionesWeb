@@ -1,103 +1,126 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>Carrito - Cliente</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1>Mi carrito</h1>
-
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar sesion</button>
-</form>
-
-<p>
-    <a th:href="@{/cliente/productos}">Volver al catalogo</a> |
-    <a th:href="@{/cliente/pedidos}">Mis pedidos</a>
-</p>
-
-<p th:if="${error}" th:text="${error}" style="color:red"></p>
-
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>Producto</th>
-        <th>Cantidad actual</th>
-        <th>Precio unitario</th>
-        <th>Subtotal</th>
-        <th>Actualizar cantidad</th>
-        <th>Eliminar</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="item : ${resumen.items}">
-        <td th:text="${item.productoNombre}"></td>
-        <td th:text="${item.cantidad}"></td>
-        <td th:text="${item.precioUnitario}"></td>
-        <td th:text="${item.subtotal}"></td>
-
-        <td>
-            <form th:action="@{/cliente/carrito/actualizar}" method="post">
-                <input type="hidden" name="detalleId" th:value="${item.detalleId}">
-                <input type="number" name="cantidad" min="1" th:value="${item.cantidad}" required>
-                <button type="submit">Actualizar</button>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/productos}">Catálogo</a>
+            <a th:href="@{/cliente/carrito}" class="active">Carrito</a>
+            <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
-        </td>
+        </div>
+    </div>
+</nav>
 
-        <td>
-            <form th:action="@{/cliente/carrito/eliminar}" method="post">
-                <input type="hidden" name="detalleId" th:value="${item.detalleId}">
-                <button type="submit">Eliminar</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Mi Carrito</h1>
+        </div>
 
-<p>Total del pedido: <strong th:text="${resumen.total}"></strong></p>
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
 
-<h2>Direcciones de entrega</h2>
-<ul>
-    <li th:each="direccion : ${direcciones}">
-        <span th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito + ' - ' + direccion.direccionExacta}"></span>
-    </li>
-</ul>
+        <div class="card" style="margin-bottom:24px">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio unitario</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${resumen.items}">
+                            <td th:text="${item.productoNombre}"></td>
+                            <td th:text="|₡${item.precioUnitario}|"></td>
+                            <td>
+                                <form th:action="@{/cliente/carrito/actualizar}" method="post" class="form-inline">
+                                    <div class="qty-group">
+                                        <input type="hidden" name="detalleId" th:value="${item.detalleId}">
+                                        <input type="number" name="cantidad" min="1" th:value="${item.cantidad}" required>
+                                        <button type="submit" class="btn-sm btn-outline">↺</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td th:text="|₡${item.subtotal}|"></td>
+                            <td>
+                                <form th:action="@{/cliente/carrito/eliminar}" method="post" class="form-inline">
+                                    <input type="hidden" name="detalleId" th:value="${item.detalleId}">
+                                    <button type="submit" class="btn-sm btn-danger-outline">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="total-row">
+                <span class="total-label">Total</span>
+                <span class="total-value" th:text="|₡${resumen.total}|"></span>
+            </div>
+        </div>
 
-<h3>Registrar direccion</h3>
-<form th:action="@{/cliente/direcciones}" th:object="${direccionRequest}" method="post">
-    <label>Provincia:</label>
-    <input type="text" th:field="*{provincia}" required>
-    <br>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">Registrar nueva dirección</p>
+                    <form th:action="@{/cliente/direcciones}" th:object="${direccionRequest}" method="post">
+                        <div class="form-group">
+                            <label>Provincia</label>
+                            <input type="text" th:field="*{provincia}" placeholder="Ej. San José" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cantón</label>
+                            <input type="text" th:field="*{canton}" placeholder="Ej. Central" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Distrito</label>
+                            <input type="text" th:field="*{distrito}" placeholder="Ej. Carmen" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección exacta</label>
+                            <input type="text" th:field="*{direccionExacta}" placeholder="Calle, número, referencias…" required>
+                        </div>
+                        <button type="submit" class="btn-action btn-outline" style="width:100%">Guardar dirección</button>
+                    </form>
+                </div>
+            </div>
 
-    <label>Canton:</label>
-    <input type="text" th:field="*{canton}" required>
-    <br>
-
-    <label>Distrito:</label>
-    <input type="text" th:field="*{distrito}" required>
-    <br>
-
-    <label>Direccion exacta:</label>
-    <input type="text" th:field="*{direccionExacta}" required>
-    <br>
-
-    <button type="submit">Guardar direccion</button>
-</form>
-
-<h3>Confirmar pedido</h3>
-<form th:action="@{/cliente/pedidos/confirmar}" method="post">
-    <label>Selecciona una direccion:</label>
-
-    <select name="direccionId" required>
-        <option value="">-- Seleccionar --</option>
-        <option th:each="direccion : ${direcciones}"
-                th:value="${direccion.id}"
-                th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito}">
-        </option>
-    </select>
-
-    <button type="submit">Confirmar pedido</button>
-</form>
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">Confirmar pedido</p>
+                    <form th:action="@{/cliente/pedidos/confirmar}" method="post">
+                        <div class="form-group">
+                            <label for="direccionId">Dirección de entrega</label>
+                            <select id="direccionId" name="direccionId" required>
+                                <option value="">-- Seleccionar --</option>
+                                <option th:each="direccion : ${direcciones}"
+                                        th:value="${direccion.id}"
+                                        th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-action btn-teal" style="width:100%">Confirmar pedido</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

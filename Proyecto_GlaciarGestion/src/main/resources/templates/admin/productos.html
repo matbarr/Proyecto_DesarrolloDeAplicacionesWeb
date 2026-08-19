@@ -1,59 +1,82 @@
 <!DOCTYPE html>
-<html lang="es" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>Productos - Administrador</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos – Admin | Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1>Gestion de productos</h1>
-
-<p>Usuario: <strong th:text="${usuario.nombre}"></strong></p>
-
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar sesion</button>
-</form>
-
-<p>
-    <a data-th-href="@{/admin/productos/nuevo}">Registrar producto</a> |
-    <a data-th-href="@{/admin/pedidos}">Consultar pedidos</a>
-</p>
-
-<p th:if="${error}" th:text="${error}" style="color:red"></p>
-
-<table border="1" cellpadding="6">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Presentacion</th>
-        <th>Precio</th>
-        <th>Cantidad</th>
-        <th>Activo</th>
-        <th>Modificar</th>
-        <th>Desactivar</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    <tr th:each="producto : ${productos}">
-        <td th:text="${producto.id}"></td>
-        <td th:text="${producto.nombre}"></td>
-        <td th:text="${producto.presentacion}"></td>
-        <td th:text="${producto.precio}"></td>
-        <td th:text="${producto.cantidad}"></td>
-        <td th:text="${producto.activo}"></td>
-
-        <td>
-            <a th:href="@{'/admin/productos/' + ${producto.id} + '/editar'}">Modificar</a>
-        </td>
-
-        <td>
-            <form th:action="@{'/admin/productos/' + ${producto.id} + '/desactivar'}" method="post">
-                <button type="submit" th:disabled="${!producto.activo}">Desactivar</button>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/admin/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/admin/productos}" class="active">Productos</a>
+            <a th:href="@{/admin/pedidos}">Pedidos</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
             </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Gestión de Productos</h1>
+            <a class="btn-action btn-teal" th:href="@{/admin/productos/nuevo}">+ Registrar producto</a>
+        </div>
+
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="card">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Presentación</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="producto : ${productos}">
+                            <td th:text="${producto.id}"></td>
+                            <td th:text="${producto.nombre}"></td>
+                            <td th:text="${producto.presentacion}"></td>
+                            <td th:text="|₡${producto.precio}|"></td>
+                            <td th:text="${producto.cantidad}"></td>
+                            <td>
+                                <span th:class="${producto.activo} ? 'badge badge-activo' : 'badge badge-inactivo'"
+                                      th:text="${producto.activo} ? 'Activo' : 'Inactivo'"></span>
+                            </td>
+                            <td>
+                                <div class="action-group">
+                                    <a class="btn-sm btn-outline"
+                                       th:href="@{/admin/productos/{id}/editar(id=${producto.id})}">Editar</a>
+                                    <form th:action="@{/admin/productos/{id}/desactivar(id=${producto.id})}"
+                                          method="post" class="form-inline">
+                                        <button type="submit" class="btn-sm btn-danger-outline"
+                                                th:classappend="${!producto.activo} ? ' btn-disabled'"
+                                                th:disabled="${!producto.activo}">Desactivar</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

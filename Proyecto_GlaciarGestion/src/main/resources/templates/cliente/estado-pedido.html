@@ -2,18 +2,82 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Estado del pedido</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estado del Pedido – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
-<h1>Estado del pedido</h1>
-<form th:action="@{/logout}" method="post">
-    <button type="submit">Cerrar sesion</button>
-</form>
-<p><a th:href="@{/cliente/pedidos}">Volver a pedidos</a></p>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/productos}">Catálogo</a>
+            <a th:href="@{/cliente/carrito}">Carrito</a>
+            <a th:href="@{/cliente/pedidos}" class="active">Mis Pedidos</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
 
-<p>Pedido #: <strong th:text="${pedido.id}"></strong></p>
-<p>Estado actual: <strong th:text="${pedido.estado}"></strong></p>
-<p>Fecha: <span th:text="${pedido.fecha}"></span></p>
-<p>Total: <span th:text="${pedido.total}"></span></p>
+<div class="page">
+    <div class="container" style="max-width:700px">
+        <div class="page-header">
+            <h1 class="page-title" th:text="'Estado del Pedido #' + ${pedido.id}"></h1>
+            <a th:href="@{/cliente/pedidos}" class="btn-sm btn-outline">← Volver</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <div class="tracker">
+                    <div th:class="|tracker-step ${pedido.estado.toString() == 'PENDIENTE' ? 'active' : 'done'}|">
+                        <div class="tracker-dot">1</div>
+                        <div class="tracker-label">Pendiente</div>
+                    </div>
+                    <div th:class="|tracker-step ${pedido.estado.toString() == 'EN_PREPARACION' ? 'active' : (pedido.estado.toString() == 'LISTO' || pedido.estado.toString() == 'ENTREGADO' ? 'done' : '')}|">
+                        <div class="tracker-dot">2</div>
+                        <div class="tracker-label">En preparación</div>
+                    </div>
+                    <div th:class="|tracker-step ${pedido.estado.toString() == 'LISTO' ? 'active' : (pedido.estado.toString() == 'ENTREGADO' ? 'done' : '')}|">
+                        <div class="tracker-dot">3</div>
+                        <div class="tracker-label">Listo</div>
+                    </div>
+                    <div th:class="|tracker-step ${pedido.estado.toString() == 'ENTREGADO' ? 'done' : ''}|">
+                        <div class="tracker-dot">4</div>
+                        <div class="tracker-label">Entregado</div>
+                    </div>
+                </div>
+
+                <hr class="divider">
+
+                <div class="info-grid" style="padding:0">
+                    <div class="info-item">
+                        <span class="info-label">Número de pedido</span>
+                        <span class="info-value" th:text="'#' + ${pedido.id}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha</span>
+                        <span class="info-value" th:text="${pedido.fecha}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Total</span>
+                        <span class="info-value" th:text="|₡${pedido.total}|"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estado actual</span>
+                        <span th:class="|badge badge-${pedido.estado}|"
+                              th:text="${pedido.estado}"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
