@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas – Glaciar Gestion</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/inicio}">
+            <span class="snowflake">❄</span> Glaciar Gestion
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/inicio}">Inicio</a>
+            <a th:href="@{/cliente/productos}">Catalogo</a>
+            <a th:href="@{/cliente/carrito}">Carrito</a>
+            <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+            <a th:href="@{/cliente/consultas}" class="active">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesion</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Consultas y Pedidos Especificos</h1>
+        </div>
+
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
+        <div class="page-alert success" th:if="${success}" th:text="${success}"></div>
+
+        <div class="chat-layout">
+            <div class="chat-sidebar">
+                <div class="card" style="margin-bottom:16px">
+                    <div class="card-body">
+                        <p class="card-title">Nueva consulta</p>
+                        <form th:action="@{/cliente/consultas}" th:object="${consultaCrearRequest}" method="post">
+                            <div class="form-group">
+                                <label for="asunto">Asunto</label>
+                                <input id="asunto" type="text" th:field="*{asunto}" placeholder="Ej. Pedido especial para evento" required>
+                                <span class="form-error" th:if="${#fields.hasErrors('asunto')}" th:errors="*{asunto}"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="mensaje">Mensaje inicial</label>
+                                <textarea id="mensaje" th:field="*{mensaje}" rows="4" placeholder="Describe tu duda o pedido especifico..." required></textarea>
+                                <span class="form-error" th:if="${#fields.hasErrors('mensaje')}" th:errors="*{mensaje}"></span>
+                            </div>
+                            <button type="submit" class="btn-action btn-teal" style="width:100%">Enviar consulta</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title">Mis conversaciones</p>
+                        <div class="chat-thread-list" th:if="${!consultas.isEmpty()}">
+                            <a class="chat-thread-item"
+                               th:each="consulta : ${consultas}"
+                               th:href="@{/cliente/consultas(consultaId=${consulta.id})}"
+                               th:classappend="${consultaSeleccionada != null and consultaSeleccionada.id == consulta.id} ? ' active'">
+                                <strong>
+                                    <span th:text="${consulta.asunto}"></span>
+                                    <span class="chat-unread-dot" th:if="${consultasNoLeidas.contains(consulta.id)}">Nuevo</span>
+                                </strong>
+                                <span th:text="${consulta.fechaActualizacion}"></span>
+                                <small class="chat-thread-state" th:text="${consulta.abierta} ? 'Abierta' : 'Cerrada'"></small>
+                            </a>
+                        </div>
+                        <p th:if="${consultas.isEmpty()}" style="margin:0;color:var(--muted)">Aun no tienes consultas registradas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-main">
+                <div class="card" th:if="${consultaSeleccionada != null}">
+                    <div class="card-body chat-header">
+                        <p class="card-title" style="margin:0" th:text="${consultaSeleccionada.asunto}"></p>
+                        <span class="badge" th:text="${consultaSeleccionada.abierta} ? 'Abierta' : 'Cerrada'"></span>
+                    </div>
+
+                    <div class="card-body" style="padding-top:0">
+                        <form th:if="${consultaSeleccionada.abierta}" th:action="@{/cliente/consultas/{id}/cerrar(id=${consultaSeleccionada.id})}" method="post" class="form-inline">
+                            <button type="submit" class="btn-sm btn-danger-outline">Cerrar consulta</button>
+                        </form>
+                        <form th:if="${!consultaSeleccionada.abierta}" th:action="@{/cliente/consultas/{id}/reabrir(id=${consultaSeleccionada.id})}" method="post" class="form-inline">
+                            <button type="submit" class="btn-sm btn-outline">Reabrir consulta</button>
+                        </form>
+                    </div>
+
+                    <div class="chat-messages">
+                        <div class="chat-message"
+                             th:each="mensaje : ${mensajes}"
+                             th:classappend="${mensaje.emisor.rol.toString() == 'CLIENTE'} ? ' own' : ' admin'">
+                            <div class="chat-meta">
+                                <strong th:text="${mensaje.emisor.nombre}"></strong>
+                                <span th:text="${mensaje.fecha}"></span>
+                            </div>
+                            <p th:text="${mensaje.contenido}"></p>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="border-top:1px solid var(--border)">
+                        <form th:action="@{/cliente/consultas/{id}/mensajes(id=${consultaSeleccionada.id})}"
+                              th:object="${consultaMensajeRequest}"
+                              method="post">
+                            <div class="form-group" style="margin-bottom:10px">
+                                <label for="mensajeRespuesta">Responder</label>
+                                <textarea id="mensajeRespuesta" th:field="*{mensaje}" rows="3" placeholder="Escribe tu mensaje..." th:disabled="${!consultaSeleccionada.abierta}" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-action btn-primary" th:disabled="${!consultaSeleccionada.abierta}">Enviar mensaje</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" th:if="${consultaSeleccionada == null}">
+                    <div class="card-body">
+                        <p style="margin:0;color:var(--muted)">Selecciona una conversacion o crea una nueva consulta para empezar a chatear con administracion.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

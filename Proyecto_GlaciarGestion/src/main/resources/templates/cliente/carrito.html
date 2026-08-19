@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/inicio}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/inicio}">Inicio</a>
+            <a th:href="@{/cliente/productos}">Catálogo</a>
+            <a th:href="@{/cliente/carrito}" class="active">Carrito</a>
+            <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+            <a th:href="@{/cliente/consultas}">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Mi Carrito</h1>
+        </div>
+
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="card" style="margin-bottom:24px">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio unitario</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${resumen.items}">
+                            <td th:text="${item.productoNombre}"></td>
+                            <td th:text="|₡${item.precioUnitario}|"></td>
+                            <td>
+                                <form th:action="@{/cliente/carrito/actualizar}" method="post" class="form-inline">
+                                    <div class="qty-group">
+                                        <input type="hidden" name="detalleId" th:value="${item.detalleId}">
+                                        <input type="number" name="cantidad" min="1" th:value="${item.cantidad}" required>
+                                        <button type="submit" class="btn-sm btn-outline">↺</button>
+                                    </div>
+                                </form>
+                            </td>
+                            <td th:text="|₡${item.subtotal}|"></td>
+                            <td>
+                                <form th:action="@{/cliente/carrito/eliminar}" method="post" class="form-inline">
+                                    <input type="hidden" name="detalleId" th:value="${item.detalleId}">
+                                    <button type="submit" class="btn-sm btn-danger-outline">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="total-row">
+                <span class="total-label">Total</span>
+                <span class="total-value" th:text="|₡${resumen.total}|"></span>
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">Registrar nueva dirección</p>
+                    <form th:action="@{/cliente/direcciones}" th:object="${direccionRequest}" method="post">
+                        <div class="form-group">
+                            <label>Provincia</label>
+                            <input type="text" th:field="*{provincia}" placeholder="Ej. San José" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Cantón</label>
+                            <input type="text" th:field="*{canton}" placeholder="Ej. Central" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Distrito</label>
+                            <input type="text" th:field="*{distrito}" placeholder="Ej. Carmen" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Dirección exacta</label>
+                            <input type="text" th:field="*{direccionExacta}" placeholder="Calle, número, referencias…" required>
+                        </div>
+                        <button type="submit" class="btn-action btn-outline" style="width:100%">Guardar dirección</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-title">Confirmar pedido</p>
+                    <form th:action="@{/cliente/pedidos/confirmar}" method="post">
+                        <div class="form-group">
+                            <label for="direccionId">Dirección de entrega</label>
+                            <select id="direccionId" name="direccionId" required>
+                                <option value="">-- Seleccionar --</option>
+                                <option th:each="direccion : ${direcciones}"
+                                        th:value="${direccion.id}"
+                                        th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito}"></option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn-action btn-teal" style="width:100%">Confirmar pedido</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

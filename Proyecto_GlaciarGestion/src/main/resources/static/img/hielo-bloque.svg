@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="750" viewBox="0 0 1200 750" role="img" aria-label="Hielo en bloque">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef6ff"/>
+      <stop offset="100%" stop-color="#d8e8fb"/>
+    </linearGradient>
+    <linearGradient id="block" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/>
+      <stop offset="100%" stop-color="#c7dcf4" stop-opacity="0.95"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="750" fill="url(#bg3)"/>
+  <rect x="120" y="510" width="960" height="70" rx="12" fill="#a9bfd7" opacity="0.35"/>
+  <g transform="translate(180 180)">
+    <rect x="0" y="0" width="760" height="320" rx="26" fill="url(#block)" stroke="#aec9e7" stroke-width="4"/>
+    <rect x="32" y="38" width="696" height="244" rx="18" fill="none" stroke="#d8e9fa" stroke-width="5"/>
+    <line x1="140" y1="0" x2="140" y2="320" stroke="#d2e5f8" stroke-width="3"/>
+    <line x1="330" y1="0" x2="330" y2="320" stroke="#d2e5f8" stroke-width="3"/>
+    <line x1="540" y1="0" x2="540" y2="320" stroke="#d2e5f8" stroke-width="3"/>
+  </g>
+</svg>

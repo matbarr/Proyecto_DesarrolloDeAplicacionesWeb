@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultas – Admin | Glaciar Gestion</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/admin/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestion
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/admin/productos}">Productos</a>
+            <a th:href="@{/admin/pedidos}">Pedidos</a>
+            <a th:href="@{/admin/consultas}" class="active">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesion</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Bandeja de Consultas</h1>
+        </div>
+
+        <div class="card" style="margin-bottom:16px">
+            <div class="card-body">
+                <form th:action="@{/admin/consultas}" method="get" class="form-grid-app">
+                    <div class="form-group">
+                        <label for="cliente">Cliente</label>
+                        <input id="cliente" name="cliente" type="text" placeholder="Nombre o correo" th:value="${filtroCliente}">
+                    </div>
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <select id="estado" name="estado">
+                            <option value="todas" th:selected="${filtroEstado == 'todas'}">Todas</option>
+                            <option value="abiertas" th:selected="${filtroEstado == 'abiertas'}">Abiertas</option>
+                            <option value="cerradas" th:selected="${filtroEstado == 'cerradas'}">Cerradas</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="desde">Desde</label>
+                        <input id="desde" name="desde" type="date" th:value="${filtroDesde}">
+                    </div>
+                    <div class="form-group">
+                        <label for="hasta">Hasta</label>
+                        <input id="hasta" name="hasta" type="date" th:value="${filtroHasta}">
+                    </div>
+                    <div class="form-group full" style="margin-bottom:0">
+                        <button type="submit" class="btn-action btn-outline">Filtrar bandeja</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
+        <div class="page-alert success" th:if="${success}" th:text="${success}"></div>
+
+        <div class="chat-layout admin">
+            <div class="chat-sidebar">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-title">Conversaciones activas</p>
+                        <div class="chat-thread-list" th:if="${!consultas.isEmpty()}">
+                            <a class="chat-thread-item"
+                               th:each="consulta : ${consultas}"
+                               th:href="@{/admin/consultas(consultaId=${consulta.id})}"
+                               th:classappend="${consultaSeleccionada != null and consultaSeleccionada.id == consulta.id} ? ' active'">
+                                <strong>
+                                    <span th:text="${consulta.asunto}"></span>
+                                    <span class="chat-unread-dot" th:if="${consultasNoLeidas.contains(consulta.id)}">Nuevo</span>
+                                </strong>
+                                <span th:text="${consulta.cliente.nombre + ' - ' + consulta.fechaActualizacion}"></span>
+                                <small class="chat-thread-state" th:text="${consulta.abierta} ? 'Abierta' : 'Cerrada'"></small>
+                            </a>
+                        </div>
+                        <p th:if="${consultas.isEmpty()}" style="margin:0;color:var(--muted)">No hay consultas registradas todavia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-main">
+                <div class="card" th:if="${consultaSeleccionada != null}">
+                    <div class="card-body chat-header">
+                        <div>
+                            <p class="card-title" style="margin:0" th:text="${consultaSeleccionada.asunto}"></p>
+                            <small th:text="${'Cliente: ' + consultaSeleccionada.cliente.nombre + ' (' + consultaSeleccionada.cliente.correo + ')'}"></small>
+                        </div>
+                        <span class="badge" th:text="${consultaSeleccionada.abierta} ? 'Abierta' : 'Cerrada'"></span>
+                    </div>
+
+                    <div class="card-body" style="padding-top:0">
+                        <form th:if="${consultaSeleccionada.abierta}" th:action="@{/admin/consultas/{id}/cerrar(id=${consultaSeleccionada.id})}" method="post" class="form-inline">
+                            <button type="submit" class="btn-sm btn-danger-outline">Cerrar consulta</button>
+                        </form>
+                        <form th:if="${!consultaSeleccionada.abierta}" th:action="@{/admin/consultas/{id}/reabrir(id=${consultaSeleccionada.id})}" method="post" class="form-inline">
+                            <button type="submit" class="btn-sm btn-outline">Reabrir consulta</button>
+                        </form>
+                    </div>
+
+                    <div class="chat-messages">
+                        <div class="chat-message"
+                             th:each="mensaje : ${mensajes}"
+                             th:classappend="${mensaje.emisor.rol.toString() == 'ADMINISTRADOR'} ? ' own' : ' customer'">
+                            <div class="chat-meta">
+                                <strong th:text="${mensaje.emisor.nombre}"></strong>
+                                <span th:text="${mensaje.fecha}"></span>
+                            </div>
+                            <p th:text="${mensaje.contenido}"></p>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="border-top:1px solid var(--border)">
+                        <form th:action="@{/admin/consultas/{id}/mensajes(id=${consultaSeleccionada.id})}"
+                              th:object="${consultaMensajeRequest}"
+                              method="post">
+                            <div class="form-group" style="margin-bottom:10px">
+                                <label for="mensajeAdmin">Responder al cliente</label>
+                                <textarea id="mensajeAdmin" th:field="*{mensaje}" rows="3" placeholder="Escribe una respuesta..." th:disabled="${!consultaSeleccionada.abierta}" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-action btn-primary" th:disabled="${!consultaSeleccionada.abierta}">Enviar respuesta</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" th:if="${consultaSeleccionada != null}" style="margin-top:16px">
+                    <div class="card-body">
+                        <p class="card-title">Crear pedido manual desde esta consulta</p>
+                        <form th:action="@{/admin/consultas/{id}/pedido-manual(id=${consultaSeleccionada.id})}"
+                              th:object="${pedidoManualRequest}"
+                              method="post">
+                            <div class="form-grid-app">
+                                <div class="form-group">
+                                    <label for="productoId">Producto</label>
+                                    <select id="productoId" th:field="*{productoId}" required>
+                                        <option value="">-- Seleccionar --</option>
+                                        <option th:each="producto : ${productosActivos}"
+                                                th:value="${producto.id}"
+                                                th:text="${producto.nombre + ' (' + producto.presentacion + ') - Stock: ' + producto.cantidad}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cantidad">Cantidad</label>
+                                    <input id="cantidad" type="number" min="1" th:field="*{cantidad}" required>
+                                </div>
+                                <div class="form-group full">
+                                    <label for="direccionId">Direccion de entrega del cliente</label>
+                                    <select id="direccionId" th:field="*{direccionId}" required>
+                                        <option value="">-- Seleccionar --</option>
+                                        <option th:each="direccion : ${direccionesCliente}"
+                                                th:value="${direccion.id}"
+                                                th:text="${direccion.provincia + ', ' + direccion.canton + ', ' + direccion.distrito + ' - ' + direccion.direccionExacta}"></option>
+                                    </select>
+                                </div>
+                                <div class="form-group full">
+                                    <label for="observaciones">Observaciones</label>
+                                    <textarea id="observaciones" th:field="*{observaciones}" rows="3" placeholder="Ej. Pedido para evento nocturno, entregar entre 5pm y 6pm"></textarea>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn-action btn-teal" th:disabled="${!consultaSeleccionada.abierta}">Crear pedido manual</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card" th:if="${consultaSeleccionada == null}">
+                    <div class="card-body">
+                        <p style="margin:0;color:var(--muted)">Selecciona una consulta para responder mensajes y registrar pedidos manuales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

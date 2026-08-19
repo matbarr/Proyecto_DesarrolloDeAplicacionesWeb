@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/inicio}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/inicio}">Inicio</a>
+            <a th:href="@{/cliente/productos}" class="active">Catálogo</a>
+            <a th:href="@{/cliente/carrito}">Carrito</a>
+            <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+            <a th:href="@{/cliente/consultas}">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container" style="max-width:640px">
+        <div class="page-header">
+            <a th:href="@{/cliente/productos}" class="btn-sm btn-outline">← Volver al catálogo</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h2 style="font-size:22px;font-weight:700;color:var(--navy);margin:0 0 4px" th:text="${producto.nombre}"></h2>
+                <p style="color:var(--muted);font-size:14px;margin:0 0 22px" th:text="${producto.presentacion}"></p>
+
+                <div class="info-grid" style="padding:0;margin-bottom:24px">
+                    <div class="info-item">
+                        <span class="info-label">Precio</span>
+                        <span class="info-value" style="font-size:24px;color:var(--brand)" th:text="'₡' + ${producto.precio}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Stock disponible</span>
+                        <span class="info-value" th:text="${producto.cantidad}"></span>
+                    </div>
+                </div>
+
+                <form th:action="@{/cliente/carrito/agregar}" method="post">
+                    <input type="hidden" name="productoId" th:value="${producto.id}">
+                    <div style="display:flex;align-items:center;gap:10px">
+                        <input type="number" name="cantidad" min="1" value="1" required
+                               style="width:80px;padding:9px 10px;border:1.5px solid #c8d9eb;border-radius:8px;font-size:15px;text-align:center;font-family:inherit">
+                        <button type="submit" class="btn-action btn-primary">Agregar al carrito</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Pedido – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/inicio}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/inicio}">Inicio</a>
+            <a th:href="@{/cliente/productos}">Catálogo</a>
+            <a th:href="@{/cliente/carrito}">Carrito</a>
+            <a th:href="@{/cliente/pedidos}" class="active">Mis Pedidos</a>
+            <a th:href="@{/cliente/consultas}">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title" th:text="'Pedido #' + ${pedido.id}"></h1>
+            <a th:href="@{/cliente/pedidos}" class="btn-sm btn-outline">← Volver</a>
+        </div>
+
+        <div class="card" style="margin-bottom:20px">
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label">Fecha</span>
+                    <span class="info-value" th:text="${pedido.fecha}"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Estado</span>
+                    <span th:class="|badge badge-${pedido.estado}|"
+                          th:text="${pedido.estado}"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total</span>
+                    <span class="info-value" th:text="|₡${pedido.total}|"></span>
+                </div>
+                <div class="info-item" th:if="${pedido.observaciones != null and !#strings.isEmpty(pedido.observaciones)}" style="grid-column:1/-1">
+                    <span class="info-label">Observaciones</span>
+                    <span class="info-value" th:text="${pedido.observaciones}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body" style="padding-bottom:0">
+                <p class="card-title">Productos</p>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio unitario</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="detalle : ${detalles}">
+                            <td th:text="${detalle.producto.nombre}"></td>
+                            <td th:text="${detalle.cantidad}"></td>
+                            <td th:text="|₡${detalle.precioUnitario}|"></td>
+                            <td th:text="|₡${detalle.precioUnitario * detalle.cantidad}|"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="total-row">
+                <span class="total-label">Total del pedido</span>
+                <span class="total-value" th:text="|₡${pedido.total}|"></span>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

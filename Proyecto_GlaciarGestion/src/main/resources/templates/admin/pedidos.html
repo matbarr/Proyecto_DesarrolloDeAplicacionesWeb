@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos – Admin | Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/admin/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/admin/productos}">Productos</a>
+            <a th:href="@{/admin/pedidos}" class="active">Pedidos</a>
+            <a th:href="@{/admin/consultas}">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Pedidos Realizados</h1>
+        </div>
+
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="card">
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Total</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pedido : ${pedidos}">
+                            <td th:text="${pedido.id}"></td>
+                            <td th:text="${pedido.usuario.nombre}"></td>
+                            <td th:text="${pedido.fecha}"></td>
+                            <td th:text="|₡${pedido.total}|"></td>
+                            <td>
+                                <span th:class="|badge badge-${pedido.estado}|"
+                                      th:text="${pedido.estado}"></span>
+                            </td>
+                            <td>
+                                <a class="btn-sm btn-outline"
+                                   th:href="@{/admin/pedidos/{id}(id=${pedido.id})}">Ver detalle</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

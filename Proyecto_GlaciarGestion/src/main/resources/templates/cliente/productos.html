@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/cliente/inicio}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/cliente/inicio}">Inicio</a>
+            <a th:href="@{/cliente/productos}" class="active">Catálogo</a>
+            <a th:href="@{/cliente/carrito}">Carrito</a>
+            <a th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+            <a th:href="@{/cliente/consultas}">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container">
+        <div class="products-header">
+            <h1 class="products-title">Nuestros Productos</h1>
+            <p class="products-subtitle">
+                Soluciones de frío adaptadas a cada necesidad, desde coctelería fina hasta
+                conservación industrial.
+            </p>
+        </div>
+
+        <div class="page-alert danger" th:if="${error}" th:text="${error}"></div>
+
+        <div class="products-grid">
+            <div class="product-card" th:each="producto, stat : ${productos}">
+                <div class="product-image-wrap">
+                    <img
+                        class="product-image"
+                        th:src="${#strings.containsIgnoreCase(producto.nombre, 'escama')
+                           ? '/img/escama.png'
+                           : (#strings.containsIgnoreCase(producto.nombre, 'copo')
+                           ? '/img/copos.png'
+                           : '/img/cubos.jpg')}"
+                           th:alt="${producto.nombre}">
+                    <span class="product-badge" th:if="${stat.first}">Más Popular</span>
+                </div>
+                <div class="product-card-body">
+                    <div class="product-card-name" th:text="${producto.nombre}"></div>
+                    <div class="product-card-pres" th:text="${producto.presentacion}"></div>
+                    <p class="product-card-description"
+                       th:text="${#strings.containsIgnoreCase(producto.nombre, 'tritur') ? 'Especial para frappes, smoothies y exhibición de mariscos. Enfriamiento rápido e instantáneo.' : (#strings.containsIgnoreCase(producto.nombre, 'bloque') ? 'Para necesidades de frío prolongado. Ideal para tallado de esculturas o conservación industrial de larga duración.' : 'El clásico perfecto para bebidas. Larga duración y cristalino, ideal para uso diario y coctelería estándar.')}">
+                    </p>
+                </div>
+                <div class="product-card-footer">
+                    <a class="btn-sm btn-outline product-quote-btn" th:href="@{/cliente/productos/{id}(id=${producto.id})}">Solicitar Cotización</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

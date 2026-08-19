@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión – Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header class="topbar">
+    <div class="brand" aria-hidden="true">✶ <span class="brand-name">Glaciar Gestion</span></div>
+</header>
+
+<main class="layout">
+    <section class="auth-card" aria-labelledby="titulo-login">
+        <h1 id="titulo-login" class="auth-title">Iniciar sesion</h1>
+        <p class="auth-subtitle">Ingresa tus credenciales para continuar</p>
+
+        <p class="alert alert-success" th:if="${success}" th:text="${success}"></p>
+        <p class="alert alert-danger" th:if="${error}" th:text="${error}"></p>
+
+        <form th:action="@{/login}" th:object="${loginRequest}" method="post" novalidate>
+            <div class="field">
+                <label for="correo">Correo electronico</label>
+                <div class="input-wrap">
+                    <span class="icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"></path>
+                        </svg>
+                    </span>
+                    <input id="correo" type="email" th:field="*{correo}" placeholder="usuario@ejemplo.com" autocomplete="email" required>
+                </div>
+                <small class="field-error" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></small>
+            </div>
+
+            <div class="field">
+                <label for="contrasena">Contrasena</label>
+                <div class="input-wrap">
+                    <span class="icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 8h-1V6a4 4 0 1 0-8 0v2H7a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2zm-7-2a2 2 0 1 1 4 0v2h-4V6zm2 10a2 2 0 0 1-1-3.73V11h2v1.27A2 2 0 0 1 12 16z"></path>
+                        </svg>
+                    </span>
+                    <input id="contrasena" type="password" th:field="*{contrasena}" placeholder="********" autocomplete="current-password" required>
+                </div>
+                <small class="field-error" th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}"></small>
+            </div>
+
+            <button type="submit" class="btn">Ingresar</button>
+        </form>
+
+        <p class="link-row">
+            <a th:href="@{/registro}">No tienes cuenta? Registrate aqui</a>
+        </p>
+    </section>
+</main>
+</body>
+</html>

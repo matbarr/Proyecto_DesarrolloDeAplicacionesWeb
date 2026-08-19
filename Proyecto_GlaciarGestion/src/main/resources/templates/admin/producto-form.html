@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto – Admin | Glaciar Gestión</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a class="nav-brand" th:href="@{/admin/productos}">
+            <span class="snowflake">❄</span> Glaciar Gestión
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/admin/productos}" class="active">Productos</a>
+            <a th:href="@{/admin/pedidos}">Pedidos</a>
+            <a th:href="@{/admin/consultas}">Consultas</a>
+        </div>
+        <div class="nav-right">
+            <span class="nav-user" th:text="'Hola, ' + ${usuario.nombre}"></span>
+            <form th:action="@{/logout}" method="post" class="form-inline">
+                <button type="submit" class="btn-logout">Cerrar sesión</button>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<div class="page">
+    <div class="container" style="max-width:700px">
+        <div class="page-header">
+            <h1 class="page-title" th:text="${modo == 'nuevo'} ? 'Registrar Producto' : 'Editar Producto'"></h1>
+            <a th:href="@{/admin/productos}" class="btn-sm btn-outline">← Volver</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form th:action="${modo == 'nuevo' ? '/admin/productos' : '/admin/productos/' + producto.id}"
+                      th:object="${productoRequest}"
+                      method="post">
+
+                    <div class="form-grid-app">
+                        <div class="form-group">
+                            <label for="nombre">Nombre</label>
+                            <input id="nombre" type="text" th:field="*{nombre}" placeholder="Nombre del producto" required>
+                            <span class="form-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="presentacion">Presentación</label>
+                            <input id="presentacion" type="text" th:field="*{presentacion}" placeholder="Ej. 500ml, 1kg…" required>
+                            <span class="form-error" th:if="${#fields.hasErrors('presentacion')}" th:errors="*{presentacion}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="precio">Precio (₡)</label>
+                            <input id="precio" type="number" step="0.01" th:field="*{precio}" placeholder="0.00" required>
+                            <span class="form-error" th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad en stock</label>
+                            <input id="cantidad" type="number" th:field="*{cantidad}" placeholder="0" required>
+                            <span class="form-error" th:if="${#fields.hasErrors('cantidad')}" th:errors="*{cantidad}"></span>
+                        </div>
+
+                        <div class="form-group full" style="flex-direction:row;align-items:center;gap:10px;margin-bottom:0">
+                            <input id="activo" type="checkbox" th:field="*{activo}" style="width:17px;height:17px;cursor:pointer">
+                            <label for="activo" style="margin:0;font-size:14px">Producto activo</label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px">
+                        <button type="submit" class="btn-action btn-teal">Guardar producto</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
